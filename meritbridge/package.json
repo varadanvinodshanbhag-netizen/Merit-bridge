@@ -6,6 +6,7 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",
+    "build:exe": "npm run build && cargo build --release --manifest-path src-tauri/Cargo.toml && powershell -Command \"Copy-Item src-tauri/target/release/meritbridge.exe ../MeritBridge.exe -Force\"",
     "preview": "vite preview",
     "tauri": "tauri"
   },
