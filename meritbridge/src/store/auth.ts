@@ -1,8 +1,15 @@
 import { create } from "zustand";
-import { persist } from "zustand/middleware";
+import { persist, createJSONStorage } from "zustand/middleware";
 import { db } from "@/db/storage";
 import { verifyPassword, SECURITY_CONFIG } from "@/services/security";
 import { logAudit } from "@/services/audit";
+
+// Clean up any legacy localStorage persistent session so fresh app launch requires login
+try {
+  localStorage.removeItem("mb-session");
+} catch {
+  // Ignore
+}
 
 export interface SessionUser {
   id: number;
@@ -116,6 +123,7 @@ export const useAuthStore = create<AuthStore>()(
     }),
     {
       name: "mb-session",
+      storage: createJSONStorage(() => sessionStorage),
       partialize: (state) => ({ user: state.user, isLocked: state.isLocked }),
     }
   )

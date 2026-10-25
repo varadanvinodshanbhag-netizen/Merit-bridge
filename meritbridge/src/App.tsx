@@ -39,26 +39,30 @@ export default function App() {
   return (
     <Suspense fallback={<PageLoadingFallback />}>
       <Routes>
+        {/* Login Page is primary entry gate */}
         <Route path="/login" element={<LoginPage />} />
+
+        {/* Authenticated Application Shell */}
         <Route
-          path="/"
           element={
             <PrivateRoute>
               <AppShell />
             </PrivateRoute>
           }
         >
-          <Route index element={<Navigate to="/dashboard" replace />} />
-          <Route path="dashboard" element={<DashboardPage />} />
-          <Route path="students/*" element={<StudentsPage />} />
-          <Route path="companies/*" element={<CompaniesPage />} />
-          <Route path="drives/*" element={<DrivesPage />} />
-          <Route path="interviews" element={<InterviewsPage />} />
-          <Route path="analytics" element={<AnalyticsPage />} />
-          <Route path="reports" element={<ReportsPage />} />
-          <Route path="settings" element={<SettingsPage />} />
+          <Route path="/dashboard" element={<DashboardPage />} />
+          <Route path="/students/*" element={<StudentsPage />} />
+          <Route path="/companies/*" element={<CompaniesPage />} />
+          <Route path="/drives/*" element={<DrivesPage />} />
+          <Route path="/interviews" element={<InterviewsPage />} />
+          <Route path="/analytics" element={<AnalyticsPage />} />
+          <Route path="/reports" element={<ReportsPage />} />
+          <Route path="/settings" element={<SettingsPage />} />
         </Route>
-        <Route path="*" element={<Navigate to="/dashboard" replace />} />
+
+        {/* Root and fallback routes navigate to /login first */}
+        <Route path="/" element={<Navigate to="/login" replace />} />
+        <Route path="*" element={<Navigate to="/login" replace />} />
       </Routes>
     </Suspense>
   );
