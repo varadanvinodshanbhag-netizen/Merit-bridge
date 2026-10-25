@@ -108,7 +108,7 @@ export default function AppShell() {
             {/* Current user badge */}
             <div className="mb-6 rounded-2xl border border-slate-800 bg-slate-900/60 p-3 flex items-center justify-center gap-3">
               <div className="w-8 h-8 rounded-full bg-gradient-to-tr from-amber-500 to-rose-500 text-xs font-bold text-white flex items-center justify-center">
-                {(user?.name || "User").slice(0, 2).toUpperCase()}
+                {((user?.name || "User").split(" ").filter(Boolean).map((w) => w[0]).slice(0, 2).join("") || "PO").toUpperCase()}
               </div>
               <div className="text-left">
                 <p className="text-xs font-semibold text-slate-200">{user?.name || "Placement Officer"}</p>

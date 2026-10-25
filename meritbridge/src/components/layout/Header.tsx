@@ -54,8 +54,15 @@ function UserMenu() {
   const lockSession = useAuthStore((s) => s.lockSession);
   const [open, setOpen] = useState(false);
 
-  const displayName = user?.name || "Priya Raman";
-  const displayRole = user?.role || "Placement Officer";
+  const displayName = user?.name || "Placement Officer";
+  const displayRole = user?.role || "Staff";
+  const initials = displayName
+    .split(" ")
+    .filter(Boolean)
+    .map((w) => w[0])
+    .slice(0, 2)
+    .join("")
+    .toUpperCase() || "PO";
 
   return (
     <div className="relative">
@@ -67,7 +74,7 @@ function UserMenu() {
         className="flex items-center gap-2.5 rounded-xl px-2 py-1 hover:bg-slate-100 dark:hover:bg-slate-800/60 transition-colors duration-75"
       >
         <div className="w-7 h-7 rounded-full bg-gradient-to-tr from-amber-500 to-rose-500 text-[11px] font-bold text-white flex items-center justify-center shrink-0 shadow-xs">
-          {displayName.slice(0, 2).toUpperCase()}
+          {initials}
         </div>
         <div className="hidden sm:block text-left leading-tight">
           <p className="text-xs font-semibold text-slate-800 dark:text-slate-100">{displayName}</p>

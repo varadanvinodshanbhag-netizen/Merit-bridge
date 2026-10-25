@@ -27,9 +27,12 @@ import {
 import { db } from "@/db/storage";
 import { calculateMetrics } from "@/services/metrics";
 import { exportToExcel } from "@/services/exporter";
+import { useAuthStore } from "@/store/auth";
+import { format } from "date-fns";
 
 export default function DashboardPage() {
   const navigate = useNavigate();
+  const user = useAuthStore((s) => s.user);
   const [dbState, setDbState] = useState(db.getState());
   const [selectedDeptId, setSelectedDeptId] = useState<string>("ALL");
   const [rosterSearch, setRosterSearch] = useState("");
@@ -186,6 +189,25 @@ export default function DashboardPage() {
 
   return (
     <div className="space-y-4">
+      {/* ─── WELCOME BANNER WITH USER DISPLAY NAME ─────────────────────── */}
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 p-4 rounded-2xl border border-slate-200/90 dark:border-slate-800 bg-white dark:bg-[#161922] shadow-[0_1px_3px_rgba(0,0,0,0.06),0_1px_2px_rgba(0,0,0,0.04)]">
+        <div>
+          <h1 className="text-xl font-bold tracking-tight text-slate-900 dark:text-slate-100 flex items-center gap-2">
+            <span>Welcome back, {user?.name || "Placement Officer"}</span>
+            <span className="text-[11px] font-semibold px-2.5 py-0.5 rounded-full bg-[var(--color-brand)]/10 text-[var(--color-brand)] border border-[var(--color-brand)]/20">
+              {user?.role || "Staff"}
+            </span>
+          </h1>
+          <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
+            Placement management &amp; analytics terminal &bull; Academic Year 2024-2025
+          </p>
+        </div>
+        <div className="flex items-center gap-2 text-xs font-semibold text-slate-500 dark:text-slate-400 bg-slate-50 dark:bg-slate-900 px-3 py-1.5 rounded-xl border border-slate-200 dark:border-slate-800 self-start sm:self-auto">
+          <Calendar size={14} className="text-[var(--color-brand)]" />
+          <span>{format(new Date(), "EEEE, d MMMM yyyy")}</span>
+        </div>
+      </div>
+
       {/* ─── TOP KPI CARDS ROW (Matching Uizard Layout) ────────────────── */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3.5">
         {/* Card 1: Total Drives Active */}
