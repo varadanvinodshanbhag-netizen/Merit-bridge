@@ -694,9 +694,9 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="flex min-h-screen flex-col items-center justify-center bg-[var(--color-bg)] px-4 py-10 transition-colors duration-200">
+    <div className="min-h-screen md:h-screen w-full flex items-center justify-center bg-[var(--color-bg)] p-3 sm:p-5 lg:p-8 overflow-y-auto md:overflow-hidden transition-colors duration-200">
       {/* Theme toggle — top right */}
-      <div className="absolute top-4 right-4">
+      <div className="absolute top-4 right-4 z-20">
         <ThemePill />
       </div>
 
@@ -704,579 +704,633 @@ export default function LoginPage() {
       <div
         className={clsx(
           "w-full rounded-3xl border border-slate-200/80 dark:border-slate-800/80",
-          "bg-white dark:bg-[#12151d] shadow-2xl shadow-slate-200/60 dark:shadow-none p-7 sm:p-8",
-          "transition-all duration-200",
-          authMode === "register" ? "max-w-md" : "max-w-sm",
+          "bg-white dark:bg-[#12151d] shadow-2xl shadow-slate-200/60 dark:shadow-none",
+          "transition-all duration-200 flex flex-col md:flex-row overflow-hidden",
+          authMode === "register" ? "max-w-4xl lg:max-w-5xl" : "max-w-3xl lg:max-w-4xl",
           isShaking && "shake"
         )}
       >
-        {/* Brand header */}
-        <div className="mb-6 flex flex-col items-center gap-2.5 text-center">
-          <MeritBridgeLogo size={50} className="shadow-md shadow-[#9e2040]/20 rounded-xl" />
-          <div>
-            <h1 className="text-2xl font-bold tracking-tight text-slate-900 dark:text-slate-100">
-              MeritBridge
-            </h1>
-            <p className="text-[10px] font-semibold uppercase tracking-widest text-[var(--color-brand)]">
-              Placement Management &amp; Analytics
+        {/* Left Panel: Desktop Brand & Feature Showcase */}
+        <div className="hidden md:flex flex-col justify-between w-72 lg:w-80 shrink-0 bg-gradient-to-br from-[#9e2040] via-[#851833] to-[#4a0d1c] p-6 lg:p-7 text-white relative select-none">
+          <div className="absolute -top-12 -left-12 w-44 h-44 rounded-full bg-white/10 blur-2xl pointer-events-none" />
+          <div className="absolute -bottom-12 -right-12 w-44 h-44 rounded-full bg-black/20 blur-2xl pointer-events-none" />
+
+          {/* Brand Header */}
+          <div className="relative z-10 space-y-2">
+            <div className="flex items-center gap-3">
+              <MeritBridgeLogo size={36} className="shadow-md shadow-black/20 rounded-xl" />
+              <div>
+                <h1 className="text-xl font-bold tracking-tight text-white leading-tight">
+                  MeritBridge
+                </h1>
+                <p className="text-[10px] font-semibold tracking-wider text-rose-200 uppercase">
+                  Placement Terminal
+                </p>
+              </div>
+            </div>
+            <p className="text-xs text-rose-100/90 leading-relaxed pt-1">
+              Unified campus placements, corporate recruitment drives &amp; batch performance analytics.
             </p>
-            <p className="mt-1 text-xs text-slate-500 dark:text-slate-400 italic">
-              Connecting Talent with Opportunity.
-            </p>
+          </div>
+
+          {/* Value Pillars */}
+          <div className="relative z-10 space-y-3 my-4">
+            <div className="flex items-start gap-2.5 rounded-xl bg-white/10 p-2.5 backdrop-blur-xs border border-white/10">
+              <div className="p-1.5 rounded-lg bg-white/15 text-rose-100 shrink-0 mt-0.5">
+                <ShieldCheck size={15} />
+              </div>
+              <div className="text-left leading-tight">
+                <p className="text-xs font-bold text-white">Salted SHA-256 Crypto</p>
+                <p className="text-[10px] text-rose-200/80 mt-0.5">Client-side password hashing and recovery security</p>
+              </div>
+            </div>
+
+            <div className="flex items-start gap-2.5 rounded-xl bg-white/10 p-2.5 backdrop-blur-xs border border-white/10">
+              <div className="p-1.5 rounded-lg bg-white/15 text-rose-100 shrink-0 mt-0.5">
+                <Lock size={15} />
+              </div>
+              <div className="text-left leading-tight">
+                <p className="text-xs font-bold text-white">Zero Cloud Dependency</p>
+                <p className="text-[10px] text-rose-200/80 mt-0.5">Full offline storage &amp; data privacy compliance</p>
+              </div>
+            </div>
+
+            <div className="flex items-start gap-2.5 rounded-xl bg-white/10 p-2.5 backdrop-blur-xs border border-white/10">
+              <div className="p-1.5 rounded-lg bg-white/15 text-rose-100 shrink-0 mt-0.5">
+                <KeyRound size={15} />
+              </div>
+              <div className="text-left leading-tight">
+                <p className="text-xs font-bold text-white">2-Tier Disaster Recovery</p>
+                <p className="text-[10px] text-rose-200/80 mt-0.5">Security questions with emergency master key override</p>
+              </div>
+            </div>
+          </div>
+
+          {/* Footer stats */}
+          <div className="relative z-10 pt-3 border-t border-white/15 text-[10px] text-rose-200 flex items-center justify-between">
+            <span>Campus Edition</span>
+            <span className="font-mono">v0.1.0</span>
           </div>
         </div>
 
-        {/* Notice banner */}
-        {notice && (
-          <div
-            role="status"
-            className="mb-4 rounded-xl bg-emerald-50 dark:bg-emerald-950/30 border border-emerald-200 dark:border-emerald-900/40 p-3 text-xs font-medium text-emerald-700 dark:text-emerald-400 flex items-start gap-2 animate-in fade-in"
-          >
-            <CheckCircle2 size={16} className="shrink-0 mt-0.5" />
-            <span>{notice}</span>
-          </div>
-        )}
-
-        {/* ══════════════════════════════════════════════════════════════════════
-            VIEW A: SIGN IN FORM
-        ══════════════════════════════════════════════════════════════════════ */}
-        {authMode === "signin" && (
-          <>
-            <div className="mb-4 text-center">
-              <h2 className="text-lg font-bold text-slate-900 dark:text-slate-100">
-                Welcome back
-              </h2>
-              <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
-                Sign in to access the placement terminal
-              </p>
+        {/* Right Panel: Interactive Authentication Area */}
+        <div className="flex-1 p-5 sm:p-6 lg:p-7 flex flex-col justify-between overflow-y-auto max-h-[92vh] md:max-h-[660px]">
+          <div>
+            {/* Mobile-only brand banner */}
+            <div className="md:hidden mb-4 flex flex-col items-center gap-2 text-center">
+              <MeritBridgeLogo size={42} className="shadow-md shadow-[#9e2040]/20 rounded-xl" />
+              <div>
+                <h1 className="text-xl font-bold tracking-tight text-slate-900 dark:text-slate-100">
+                  MeritBridge
+                </h1>
+                <p className="text-[10px] font-semibold uppercase tracking-widest text-[var(--color-brand)]">
+                  Placement Management &amp; Analytics
+                </p>
+              </div>
             </div>
 
-            {/* LIVE COUNTDOWN LOCKOUT BOX */}
-            {lockoutRemainingSecs > 0 ? (
-              <div className="rounded-2xl border border-rose-500/30 bg-rose-500/10 dark:bg-rose-950/30 p-6 text-center space-y-3 animate-in zoom-in-95">
-                <div className="inline-flex p-3 rounded-full bg-rose-500/15 text-rose-600 dark:text-rose-400">
-                  <Lock size={24} />
-                </div>
-                <div>
-                  <h3 className="text-sm font-bold text-rose-600 dark:text-rose-400">
-                    Account Temporarily Locked
-                  </h3>
-                  <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
-                    Too many failed attempts. Security freeze active.
+            {/* Notice banner */}
+            {notice && (
+              <div
+                role="status"
+                className="mb-3 rounded-xl bg-emerald-50 dark:bg-emerald-950/30 border border-emerald-200 dark:border-emerald-900/40 p-2.5 text-xs font-medium text-emerald-700 dark:text-emerald-400 flex items-start gap-2 animate-in fade-in"
+              >
+                <CheckCircle2 size={15} className="shrink-0 mt-0.5" />
+                <span>{notice}</span>
+              </div>
+            )}
+
+            {/* ══════════════════════════════════════════════════════════════════════
+                VIEW A: SIGN IN FORM
+            ══════════════════════════════════════════════════════════════════════ */}
+            {authMode === "signin" && (
+              <>
+                <div className="mb-3">
+                  <h2 className="text-base sm:text-lg font-bold text-slate-900 dark:text-slate-100">
+                    Welcome back
+                  </h2>
+                  <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
+                    Sign in to access your placement officer terminal
                   </p>
                 </div>
 
-                <div className="py-2">
-                  <div className="font-mono text-3xl font-extrabold tracking-widest text-rose-600 dark:text-rose-400">
-                    {formatLockoutTimer(lockoutRemainingSecs)}
+                {/* LIVE COUNTDOWN LOCKOUT BOX */}
+                {lockoutRemainingSecs > 0 ? (
+                  <div className="rounded-2xl border border-rose-500/30 bg-rose-500/10 dark:bg-rose-950/30 p-5 text-center space-y-2.5 animate-in zoom-in-95">
+                    <div className="inline-flex p-2.5 rounded-full bg-rose-500/15 text-rose-600 dark:text-rose-400">
+                      <Lock size={22} />
+                    </div>
+                    <div>
+                      <h3 className="text-sm font-bold text-rose-600 dark:text-rose-400">
+                        Account Temporarily Locked
+                      </h3>
+                      <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
+                        Too many failed attempts. Security freeze active.
+                      </p>
+                    </div>
+
+                    <div className="py-1">
+                      <div className="font-mono text-2xl font-extrabold tracking-widest text-rose-600 dark:text-rose-400">
+                        {formatLockoutTimer(lockoutRemainingSecs)}
+                      </div>
+                      <span className="text-[10px] text-slate-400 uppercase tracking-wider">
+                        Time remaining before reset
+                      </span>
+                    </div>
+
+                    <button
+                      type="button"
+                      onClick={() => openRecoveryWizard(lockoutTarget || undefined)}
+                      className="w-full inline-flex items-center justify-center gap-1.5 rounded-xl border border-rose-500/40 bg-white dark:bg-slate-900 px-3 py-2 text-xs font-semibold text-rose-600 dark:text-rose-400 hover:bg-rose-50 dark:hover:bg-rose-950/40 transition-colors shadow-xs"
+                    >
+                      <span>Recover Password</span>
+                      <ArrowRight size={13} />
+                    </button>
                   </div>
-                  <span className="text-[10px] text-slate-400 uppercase tracking-wider">
-                    Time remaining before reset
-                  </span>
+                ) : (
+                  <form onSubmit={handleSubmit(onSubmit)} noValidate aria-label="Sign in form">
+                    <div className="space-y-3">
+                      {/* Username */}
+                      <div>
+                        <label
+                          htmlFor="username"
+                          className="mb-1 block text-xs font-semibold text-slate-700 dark:text-slate-300"
+                        >
+                          Username
+                        </label>
+                        <div className="relative">
+                          <span className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400">
+                            <UserIcon size={14} />
+                          </span>
+                          <input
+                            id="username"
+                            type="text"
+                            autoComplete="username"
+                            autoFocus
+                            placeholder="Enter your username"
+                            {...register("username")}
+                            onBlur={(e) => checkUserLockout(e.target.value)}
+                            aria-invalid={!!errors.username}
+                            aria-describedby={errors.username ? "username-err" : undefined}
+                            className={clsx(
+                              "w-full rounded-xl border pl-9 pr-3.5 py-2 text-xs md:text-sm bg-slate-50/70 dark:bg-slate-900/60 text-slate-900 dark:text-slate-100",
+                              "placeholder:text-slate-400 dark:placeholder:text-slate-500 transition-all duration-200",
+                              "focus:bg-white dark:focus:bg-slate-900 focus:outline-none focus:ring-2 focus:ring-[var(--color-brand)]/20 focus:border-[var(--color-brand)]",
+                              errors.username ? "border-rose-500" : "border-slate-200/80 dark:border-slate-800"
+                            )}
+                          />
+                        </div>
+                        {errors.username && (
+                          <p id="username-err" className="mt-1 text-xs text-rose-500">
+                            {errors.username.message}
+                          </p>
+                        )}
+                      </div>
+
+                      {/* Password */}
+                      <div>
+                        <div className="flex items-center justify-between mb-1">
+                          <label
+                            htmlFor="password"
+                            className="block text-xs font-semibold text-slate-700 dark:text-slate-300"
+                          >
+                            Password
+                          </label>
+                          <button
+                            type="button"
+                            onClick={() => openRecoveryWizard()}
+                            className="text-xs font-semibold text-[var(--color-brand)] hover:underline"
+                          >
+                            Forgot password?
+                          </button>
+                        </div>
+                        <div className="relative">
+                          <span className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400">
+                            <Lock size={14} />
+                          </span>
+                          <input
+                            id="password"
+                            type={showPassword ? "text" : "password"}
+                            autoComplete="current-password"
+                            placeholder="Enter your password"
+                            {...register("password")}
+                            aria-invalid={!!errors.password}
+                            aria-describedby={errors.password ? "password-err" : undefined}
+                            className={clsx(
+                              "w-full rounded-xl border pl-9 pr-10 py-2 text-xs md:text-sm bg-slate-50/70 dark:bg-slate-900/60 text-slate-900 dark:text-slate-100",
+                              "placeholder:text-slate-400 dark:placeholder:text-slate-500 transition-all duration-200",
+                              "focus:bg-white dark:focus:bg-slate-900 focus:outline-none focus:ring-2 focus:ring-[var(--color-brand)]/20 focus:border-[var(--color-brand)]",
+                              errors.password ? "border-rose-500" : "border-slate-200/80 dark:border-slate-800"
+                            )}
+                          />
+                          <button
+                            type="button"
+                            onClick={() => setShowPassword((p) => !p)}
+                            aria-label={showPassword ? "Hide password" : "Show password"}
+                            className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 dark:hover:text-slate-300"
+                          >
+                            {showPassword ? <EyeOff size={15} /> : <Eye size={15} />}
+                          </button>
+                        </div>
+                        {errors.password && (
+                          <p id="password-err" className="mt-1 text-xs text-rose-500">
+                            {errors.password.message}
+                          </p>
+                        )}
+                      </div>
+
+                      {/* Remember Me Checkbox */}
+                      <div className="flex items-center justify-between pt-0.5">
+                        <label className="flex items-center gap-2 cursor-pointer select-none">
+                          <input
+                            type="checkbox"
+                            checked={rememberMe}
+                            onChange={(e) => setRememberMe(e.target.checked)}
+                            className="w-3.5 h-3.5 rounded border-slate-300 text-[var(--color-brand)] focus:ring-[var(--color-brand)]"
+                          />
+                          <span className="text-xs text-slate-600 dark:text-slate-400 font-medium">
+                            Remember me (7 days)
+                          </span>
+                        </label>
+                      </div>
+                    </div>
+
+                    {/* Error Banner */}
+                    {error && (
+                      <div
+                        role="alert"
+                        className="mt-3 rounded-xl bg-rose-50 dark:bg-rose-950/30 border border-rose-200 dark:border-rose-900/40 p-2.5 text-xs font-medium text-rose-700 dark:text-rose-400 flex items-start gap-2 animate-in fade-in"
+                      >
+                        <AlertTriangle size={15} className="shrink-0 mt-0.5" />
+                        <span>{error}</span>
+                      </div>
+                    )}
+
+                    {/* Progressive Attempts Warning */}
+                    {failedCount > 0 && failedCount < SECURITY_CONFIG.MAX_FAILED_ATTEMPTS && (
+                      <div className="mt-2 text-center">
+                        <span className="text-[11px] font-semibold text-amber-600 dark:text-amber-400">
+                          ⚠️ {SECURITY_CONFIG.MAX_FAILED_ATTEMPTS - failedCount} attempt(s) left before 15-minute lockout!
+                        </span>
+                      </div>
+                    )}
+
+                    {/* Sign In Submit */}
+                    <button
+                      type="submit"
+                      disabled={loading}
+                      className={clsx(
+                        "mt-3.5 flex w-full items-center justify-center gap-2 rounded-xl px-4 py-2",
+                        "bg-[var(--color-brand)] text-xs md:text-sm font-semibold text-white shadow-sm shadow-[#9e2040]/25",
+                        "hover:bg-[var(--color-brand-hover)] hover:shadow-md hover:shadow-[#9e2040]/30 focus-visible:ring-2 focus-visible:ring-[var(--color-brand)] focus-visible:ring-offset-2",
+                        "disabled:opacity-60 disabled:cursor-not-allowed transition-all duration-200"
+                      )}
+                    >
+                      <LogIn size={15} aria-hidden="true" />
+                      {loading ? "Verifying Credentials..." : "Sign In"}
+                    </button>
+
+                    {/* Trouble signing in suggestion box */}
+                    {failedCount >= 3 && (
+                      <div className="mt-3 rounded-xl border border-amber-500/30 bg-amber-500/10 dark:bg-amber-500/5 p-2.5 text-center space-y-1 animate-in fade-in">
+                        <p className="text-xs font-bold text-amber-600 dark:text-amber-400">
+                          Trouble signing in?
+                        </p>
+                        <p className="text-[11px] text-slate-500 dark:text-slate-400">
+                          You have had multiple failed attempts.
+                        </p>
+                        <button
+                          type="button"
+                          onClick={() => openRecoveryWizard()}
+                          className="mt-0.5 inline-flex items-center gap-1 text-xs font-bold text-amber-600 hover:underline"
+                        >
+                          <span>Recover Password</span>
+                          <ArrowRight size={12} />
+                        </button>
+                      </div>
+                    )}
+                  </form>
+                )}
+
+                {/* Quick Demo Helper */}
+                <div className="mt-3 p-2 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50/70 dark:bg-slate-900/60 flex items-center justify-between text-xs">
+                  <div className="leading-tight">
+                    <p className="font-semibold text-slate-700 dark:text-slate-300 text-[11px]">Demo Credentials</p>
+                    <p className="text-[10px] text-slate-400 font-mono">admin / admin &bull; PIN: 998877</p>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setValue("username", "admin");
+                      setValue("password", "admin");
+                    }}
+                    className="px-2 py-0.5 rounded-lg bg-[var(--color-brand)]/10 text-[var(--color-brand)] dark:bg-[var(--color-brand)]/20 font-semibold text-[11px] hover:bg-[var(--color-brand)] hover:text-white transition-colors"
+                  >
+                    Quick Fill
+                  </button>
                 </div>
 
-                <button
-                  type="button"
-                  onClick={() => openRecoveryWizard(lockoutTarget || undefined)}
-                  className="w-full inline-flex items-center justify-center gap-2 rounded-xl border border-rose-500/40 bg-white dark:bg-slate-900 px-4 py-2 text-xs font-semibold text-rose-600 dark:text-rose-400 hover:bg-rose-50 dark:hover:bg-rose-950/40 transition-colors shadow-xs"
-                >
-                  <span>Recover Password</span>
-                  <ArrowRight size={13} />
-                </button>
-              </div>
-            ) : (
-              <form onSubmit={handleSubmit(onSubmit)} noValidate aria-label="Sign in form">
-                <div className="space-y-4">
-                  {/* Username */}
+                {/* Divider: New to MeritBridge? */}
+                <div className="relative my-3">
+                  <div className="absolute inset-0 flex items-center">
+                    <div className="w-full border-t border-slate-200 dark:border-slate-800" />
+                  </div>
+                  <div className="relative flex justify-center text-[10px]">
+                    <span className="bg-white dark:bg-[#12151d] px-2 text-slate-400 font-medium">
+                      New to MeritBridge?
+                    </span>
+                  </div>
+                </div>
+
+                {/* Action buttons row */}
+                <div className="flex items-center gap-2">
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setRegError(null);
+                      setNotice(null);
+                      setAuthMode("register");
+                    }}
+                    className="flex-1 flex items-center justify-center gap-1.5 rounded-xl border border-slate-200 dark:border-slate-800 py-2 px-3 text-xs font-semibold text-slate-700 dark:text-slate-200 hover:border-[var(--color-brand)] hover:text-[var(--color-brand)] dark:hover:border-[var(--color-brand)] dark:hover:text-[var(--color-brand)] transition-all shadow-xs"
+                  >
+                    <Plus size={13} />
+                    <span>Create an Account</span>
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => openRecoveryWizard()}
+                    className="inline-flex items-center justify-center gap-1 rounded-xl px-2.5 py-2 text-[11px] font-medium text-slate-500 hover:text-[var(--color-brand)] dark:text-slate-400 dark:hover:text-slate-200 transition-colors"
+                  >
+                    <KeyRound size={12} />
+                    <span>Master Recovery</span>
+                  </button>
+                </div>
+              </>
+            )}
+
+            {/* ══════════════════════════════════════════════════════════════════════
+                VIEW B: CREATE ACCOUNT FORM (Parity with register.html)
+            ══════════════════════════════════════════════════════════════════════ */}
+            {authMode === "register" && (
+              <form onSubmit={handleRegisterSubmit} className="space-y-2.5">
+                <div className="mb-2">
+                  <h2 className="text-base sm:text-lg font-bold text-slate-900 dark:text-slate-100 flex items-center gap-1.5">
+                    <Plus size={16} className="text-[var(--color-brand)]" />
+                    <span>Create Staff Account</span>
+                  </h2>
+                  <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
+                    Set up your local placement cell credentials &amp; cryptographic security questions
+                  </p>
+                </div>
+
+                {regError && (
+                  <div
+                    role="alert"
+                    className="rounded-xl bg-rose-50 dark:bg-rose-950/30 border border-rose-200 dark:border-rose-900/40 p-2 text-xs font-medium text-rose-700 dark:text-rose-400 flex items-start gap-2"
+                  >
+                    <AlertTriangle size={14} className="shrink-0 mt-0.5" />
+                    <span>{regError}</span>
+                  </div>
+                )}
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-3.5 gap-y-2">
+                  {/* Full Name / Display Name */}
                   <div>
-                    <label
-                      htmlFor="username"
-                      className="mb-1.5 block text-xs font-semibold text-slate-700 dark:text-slate-300"
-                    >
-                      Username
+                    <label className="mb-1 block text-xs font-semibold text-slate-700 dark:text-slate-300">
+                      Full Name (Display Name)
                     </label>
                     <div className="relative">
-                      <span className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400">
+                      <span className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400">
                         <UserIcon size={14} />
                       </span>
                       <input
-                        id="username"
                         type="text"
-                        autoComplete="username"
+                        required
                         autoFocus
-                        placeholder="Enter your username"
-                        {...register("username")}
-                        onBlur={(e) => checkUserLockout(e.target.value)}
-                        aria-invalid={!!errors.username}
-                        aria-describedby={errors.username ? "username-err" : undefined}
+                        placeholder="e.g. Dr. Rajesh Kumar"
+                        value={regFullName}
+                        onChange={(e) => setRegFullName(e.target.value)}
+                        className="w-full rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50/70 dark:bg-slate-900/60 pl-9 pr-3 py-1.5 text-xs md:text-sm text-slate-900 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-[var(--color-brand)]/20 focus:border-[var(--color-brand)]"
+                      />
+                    </div>
+                  </div>
+
+                  {/* Username */}
+                  <div>
+                    <label className="mb-1 block text-xs font-semibold text-slate-700 dark:text-slate-300">
+                      Username
+                    </label>
+                    <div className="relative">
+                      <span className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400">
+                        <UserIcon size={14} />
+                      </span>
+                      <input
+                        type="text"
+                        required
+                        placeholder="3-20 chars, letters, _"
+                        value={regUsername}
+                        onChange={(e) => setRegUsername(e.target.value)}
                         className={clsx(
-                          "w-full rounded-xl border pl-9 pr-3.5 py-2.5 text-xs md:text-sm bg-slate-50/70 dark:bg-slate-900/60 text-slate-900 dark:text-slate-100",
-                          "placeholder:text-slate-400 dark:placeholder:text-slate-500 transition-all duration-200",
-                          "focus:bg-white dark:focus:bg-slate-900 focus:outline-none focus:ring-2 focus:ring-[var(--color-brand)]/20 focus:border-[var(--color-brand)]",
-                          errors.username ? "border-rose-500" : "border-slate-200/80 dark:border-slate-800"
+                          "w-full rounded-xl border pl-9 pr-3 py-1.5 text-xs md:text-sm bg-slate-50/70 dark:bg-slate-900/60 text-slate-900 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-[var(--color-brand)]/20 focus:border-[var(--color-brand)]",
+                          isUsernameTaken
+                            ? "border-rose-500"
+                            : isUsernameValid
+                            ? "border-emerald-500"
+                            : "border-slate-200 dark:border-slate-800"
                         )}
                       />
                     </div>
-                    {errors.username && (
-                      <p id="username-err" className="mt-1 text-xs text-rose-500">
-                        {errors.username.message}
+                    {regUsername && (
+                      <p
+                        className={clsx(
+                          "mt-0.5 text-[10px] font-semibold",
+                          isUsernameTaken
+                            ? "text-rose-500"
+                            : isUsernameValid
+                            ? "text-emerald-600"
+                            : "text-slate-400"
+                        )}
+                      >
+                        {isUsernameTaken
+                          ? "Username already taken"
+                          : isUsernameValid
+                          ? "✓ Available"
+                          : "3-20 chars, alphanumeric"}
                       </p>
                     )}
                   </div>
 
-                  {/* Password */}
+                  {/* Role */}
                   <div>
-                    <div className="flex items-center justify-between mb-1.5">
-                      <label
-                        htmlFor="password"
-                        className="block text-xs font-semibold text-slate-700 dark:text-slate-300"
-                      >
-                        Password
-                      </label>
-                      <button
-                        type="button"
-                        onClick={() => openRecoveryWizard()}
-                        className="text-xs font-semibold text-[var(--color-brand)] hover:underline"
-                      >
-                        Forgot password?
-                      </button>
-                    </div>
+                    <label className="mb-1 block text-xs font-semibold text-slate-700 dark:text-slate-300">
+                      Role
+                    </label>
+                    <select
+                      value={regRole}
+                      onChange={(e) => setRegRole(e.target.value as Role)}
+                      className="w-full rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50/70 dark:bg-slate-900/60 px-3 py-1.5 text-xs md:text-sm text-slate-900 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-[var(--color-brand)]/20 focus:border-[var(--color-brand)]"
+                    >
+                      <option value="Placement Officer">Placement Officer</option>
+                      <option value="Assistant">Assistant</option>
+                      <option value="Admin">Admin</option>
+                    </select>
+                  </div>
+
+                  {/* Security Question */}
+                  <div>
+                    <label className="mb-1 block text-xs font-semibold text-slate-700 dark:text-slate-300">
+                      Security Question
+                    </label>
+                    <select
+                      value={regSecurityQuestion}
+                      onChange={(e) => setRegSecurityQuestion(e.target.value)}
+                      className="w-full rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50/70 dark:bg-slate-900/60 px-3 py-1.5 text-xs md:text-sm text-slate-900 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-[var(--color-brand)]/20 focus:border-[var(--color-brand)]"
+                    >
+                      {SECURITY_QUESTIONS.map((q) => (
+                        <option key={q} value={q}>
+                          {q}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+
+                  {/* Password with Strength Meter */}
+                  <div>
+                    <label className="mb-1 block text-xs font-semibold text-slate-700 dark:text-slate-300">
+                      Password
+                    </label>
                     <div className="relative">
-                      <span className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400">
+                      <span className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400">
                         <Lock size={14} />
                       </span>
                       <input
-                        id="password"
-                        type={showPassword ? "text" : "password"}
-                        autoComplete="current-password"
-                        placeholder="Enter your password"
-                        {...register("password")}
-                        aria-invalid={!!errors.password}
-                        aria-describedby={errors.password ? "password-err" : undefined}
-                        className={clsx(
-                          "w-full rounded-xl border pl-9 pr-10 py-2.5 text-xs md:text-sm bg-slate-50/70 dark:bg-slate-900/60 text-slate-900 dark:text-slate-100",
-                          "placeholder:text-slate-400 dark:placeholder:text-slate-500 transition-all duration-200",
-                          "focus:bg-white dark:focus:bg-slate-900 focus:outline-none focus:ring-2 focus:ring-[var(--color-brand)]/20 focus:border-[var(--color-brand)]",
-                          errors.password ? "border-rose-500" : "border-slate-200/80 dark:border-slate-800"
-                        )}
+                        type={showRegPassword ? "text" : "password"}
+                        required
+                        placeholder="Create strong password"
+                        value={regPassword}
+                        onChange={(e) => setRegPassword(e.target.value)}
+                        className="w-full rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50/70 dark:bg-slate-900/60 pl-9 pr-9 py-1.5 text-xs md:text-sm text-slate-900 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-[var(--color-brand)]/20 focus:border-[var(--color-brand)]"
                       />
                       <button
                         type="button"
-                        onClick={() => setShowPassword((p) => !p)}
-                        aria-label={showPassword ? "Hide password" : "Show password"}
-                        className="absolute right-3.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 dark:hover:text-slate-300"
+                        onClick={() => setShowRegPassword(!showRegPassword)}
+                        className="absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200"
                       >
-                        {showPassword ? <EyeOff size={15} /> : <Eye size={15} />}
+                        {showRegPassword ? <EyeOff size={14} /> : <Eye size={14} />}
                       </button>
                     </div>
-                    {errors.password && (
-                      <p id="password-err" className="mt-1 text-xs text-rose-500">
-                        {errors.password.message}
+
+                    {/* 5-Bar Strength Meter */}
+                    <div className="mt-1 space-y-0.5">
+                      <div className="flex gap-1">
+                        {[1, 2, 3, 4, 5].map((idx) => (
+                          <div
+                            key={idx}
+                            className="h-1 flex-1 rounded-full transition-all duration-300"
+                            style={{
+                              backgroundColor:
+                                idx <= regStrength.score ? regStrength.color : "var(--color-border)",
+                            }}
+                          />
+                        ))}
+                      </div>
+                      {regStrength.label && (
+                        <div className="text-[10px] font-bold" style={{ color: regStrength.color }}>
+                          {regStrength.label}
+                        </div>
+                      )}
+                    </div>
+                  </div>
+
+                  {/* Confirm Password */}
+                  <div>
+                    <label className="mb-1 block text-xs font-semibold text-slate-700 dark:text-slate-300">
+                      Confirm Password
+                    </label>
+                    <div className="relative">
+                      <span className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400">
+                        <KeyRound size={14} />
+                      </span>
+                      <input
+                        type={showRegConfirmPassword ? "text" : "password"}
+                        required
+                        placeholder="Re-enter password"
+                        value={regConfirmPassword}
+                        onChange={(e) => setRegConfirmPassword(e.target.value)}
+                        className="w-full rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50/70 dark:bg-slate-900/60 pl-9 pr-9 py-1.5 text-xs md:text-sm text-slate-900 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-[var(--color-brand)]/20 focus:border-[var(--color-brand)]"
+                      />
+                      <button
+                        type="button"
+                        onClick={() => setShowRegConfirmPassword(!showRegConfirmPassword)}
+                        className="absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200"
+                      >
+                        {showRegConfirmPassword ? <EyeOff size={14} /> : <Eye size={14} />}
+                      </button>
+                    </div>
+                    {regConfirmPassword && (
+                      <p
+                        className={clsx(
+                          "mt-0.5 text-[10px] font-semibold",
+                          regPassword === regConfirmPassword ? "text-emerald-600" : "text-rose-500"
+                        )}
+                      >
+                        {regPassword === regConfirmPassword
+                          ? "✓ Passwords match"
+                          : "Passwords do not match"}
                       </p>
                     )}
                   </div>
 
-                  {/* Remember Me Checkbox */}
-                  <div className="flex items-center justify-between pt-1">
-                    <label className="flex items-center gap-2 cursor-pointer select-none">
-                      <input
-                        type="checkbox"
-                        checked={rememberMe}
-                        onChange={(e) => setRememberMe(e.target.checked)}
-                        className="w-4 h-4 rounded border-slate-300 text-[var(--color-brand)] focus:ring-[var(--color-brand)]"
-                      />
-                      <span className="text-xs text-slate-600 dark:text-slate-400 font-medium">
-                        Remember me (7 days)
-                      </span>
+                  {/* Security Answer (spans full width) */}
+                  <div className="col-span-1 sm:col-span-2">
+                    <label className="mb-1 block text-xs font-semibold text-slate-700 dark:text-slate-300">
+                      Security Answer
                     </label>
+                    <input
+                      type="text"
+                      required
+                      placeholder="Your answer (case-insensitive)"
+                      value={regSecurityAnswer}
+                      onChange={(e) => setRegSecurityAnswer(e.target.value)}
+                      className="w-full rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50/70 dark:bg-slate-900/60 px-3 py-1.5 text-xs md:text-sm text-slate-900 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-[var(--color-brand)]/20 focus:border-[var(--color-brand)]"
+                    />
+                    <p className="mt-0.5 text-[10px] text-slate-400">
+                      💡 Used to verify your identity and recover your password if forgotten.
+                    </p>
                   </div>
                 </div>
 
-                {/* Error Banner */}
-                {error && (
-                  <div
-                    role="alert"
-                    className="mt-4 rounded-xl bg-rose-50 dark:bg-rose-950/30 border border-rose-200 dark:border-rose-900/40 p-3 text-xs font-medium text-rose-700 dark:text-rose-400 flex items-start gap-2 animate-in fade-in"
+                {/* Submit & Back buttons */}
+                <div className="flex items-center gap-2 pt-1.5">
+                  <button
+                    type="submit"
+                    disabled={regLoading}
+                    className="flex-1 flex items-center justify-center gap-1.5 rounded-xl bg-[var(--color-brand)] py-2 px-3 text-xs md:text-sm font-semibold text-white shadow-sm hover:bg-[var(--color-brand-hover)] disabled:opacity-50 transition-all"
                   >
-                    <AlertTriangle size={16} className="shrink-0 mt-0.5" />
-                    <span>{error}</span>
-                  </div>
-                )}
-
-                {/* Progressive Attempts Warning */}
-                {failedCount > 0 && failedCount < SECURITY_CONFIG.MAX_FAILED_ATTEMPTS && (
-                  <div className="mt-3 text-center">
-                    <span className="text-[11px] font-semibold text-amber-600 dark:text-amber-400">
-                      ⚠️ {SECURITY_CONFIG.MAX_FAILED_ATTEMPTS - failedCount} attempt(s) left before 15-minute lockout!
-                    </span>
-                  </div>
-                )}
-
-                {/* Sign In Submit */}
-                <button
-                  type="submit"
-                  disabled={loading}
-                  className={clsx(
-                    "mt-5 flex w-full items-center justify-center gap-2 rounded-xl px-4 py-2.5",
-                    "bg-[var(--color-brand)] text-xs md:text-sm font-semibold text-white shadow-sm shadow-[#9e2040]/25",
-                    "hover:bg-[var(--color-brand-hover)] hover:shadow-md hover:shadow-[#9e2040]/30 focus-visible:ring-2 focus-visible:ring-[var(--color-brand)] focus-visible:ring-offset-2",
-                    "disabled:opacity-60 disabled:cursor-not-allowed transition-all duration-200"
-                  )}
-                >
-                  <LogIn size={15} aria-hidden="true" />
-                  {loading ? "Verifying Credentials..." : "Sign In"}
-                </button>
-
-                {/* Trouble signing in suggestion box */}
-                {failedCount >= 3 && (
-                  <div className="mt-4 rounded-xl border border-amber-500/30 bg-amber-500/10 dark:bg-amber-500/5 p-3 text-center space-y-1.5 animate-in fade-in">
-                    <p className="text-xs font-bold text-amber-600 dark:text-amber-400">
-                      Trouble signing in?
-                    </p>
-                    <p className="text-[11px] text-slate-500 dark:text-slate-400">
-                      You have had multiple failed attempts.
-                    </p>
-                    <button
-                      type="button"
-                      onClick={() => openRecoveryWizard()}
-                      className="mt-1 inline-flex items-center gap-1 text-xs font-bold text-amber-600 hover:underline"
-                    >
-                      <span>Recover Password</span>
-                      <ArrowRight size={12} />
-                    </button>
-                  </div>
-                )}
+                    <Plus size={14} />
+                    <span>{regLoading ? "Creating..." : "Create Account"}</span>
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setRegError(null);
+                      setAuthMode("signin");
+                    }}
+                    className="flex items-center justify-center gap-1.5 rounded-xl border border-slate-200 dark:border-slate-800 py-2 px-4 text-xs font-semibold text-slate-700 dark:text-slate-200 hover:border-[var(--color-brand)] hover:text-[var(--color-brand)] transition-all shadow-xs"
+                  >
+                    <LogIn size={13} />
+                    <span>Sign In</span>
+                  </button>
+                </div>
               </form>
             )}
+          </div>
 
-            {/* Quick Demo Helper */}
-            <div className="mt-4 p-2.5 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50/70 dark:bg-slate-900/60 flex items-center justify-between text-xs">
-              <div className="leading-tight">
-                <p className="font-semibold text-slate-700 dark:text-slate-300">Default Demo Credentials</p>
-                <p className="text-[10px] text-slate-400 font-mono">admin / admin &bull; PIN: 998877</p>
-              </div>
-              <button
-                type="button"
-                onClick={() => {
-                  setValue("username", "admin");
-                  setValue("password", "admin");
-                }}
-                className="px-2.5 py-1 rounded-lg bg-[var(--color-brand)]/10 text-[var(--color-brand)] dark:bg-[var(--color-brand)]/20 font-semibold text-[11px] hover:bg-[var(--color-brand)] hover:text-white transition-colors"
-              >
-                Quick Fill
-              </button>
-            </div>
-
-            {/* Divider: New to MeritBridge? */}
-            <div className="relative my-5">
-              <div className="absolute inset-0 flex items-center">
-                <div className="w-full border-t border-slate-200 dark:border-slate-800" />
-              </div>
-              <div className="relative flex justify-center text-[11px]">
-                <span className="bg-white dark:bg-[#12151d] px-3 text-slate-400 font-medium">
-                  New to MeritBridge?
-                </span>
-              </div>
-            </div>
-
-            {/* CREATE AN ACCOUNT BUTTON (Matching SecureHash Lab) */}
-            <button
-              type="button"
-              onClick={() => {
-                setRegError(null);
-                setNotice(null);
-                setAuthMode("register");
-              }}
-              className="w-full flex items-center justify-center gap-2 rounded-xl border border-slate-200 dark:border-slate-800 py-2.5 px-4 text-xs font-semibold text-slate-700 dark:text-slate-200 hover:border-[var(--color-brand)] hover:text-[var(--color-brand)] dark:hover:border-[var(--color-brand)] dark:hover:text-[var(--color-brand)] transition-all shadow-xs"
-            >
-              <Plus size={14} />
-              <span>Create an Account</span>
-            </button>
-
-            {/* Quick Recovery link */}
-            <div className="mt-4 pt-2 text-center">
-              <button
-                type="button"
-                onClick={() => openRecoveryWizard()}
-                className="inline-flex items-center gap-1.5 text-xs font-medium text-slate-500 hover:text-[var(--color-brand)] dark:text-slate-400 dark:hover:text-slate-200 transition-colors"
-              >
-                <KeyRound size={13} />
-                <span>Emergency Master Recovery</span>
-              </button>
-            </div>
-          </>
-        )}
-
-        {/* ══════════════════════════════════════════════════════════════════════
-            VIEW B: CREATE ACCOUNT FORM (Parity with register.html)
-        ══════════════════════════════════════════════════════════════════════ */}
-        {authMode === "register" && (
-          <form onSubmit={handleRegisterSubmit} className="space-y-3.5">
-            <div className="mb-2 text-center">
-              <h2 className="text-lg font-bold text-slate-900 dark:text-slate-100 flex items-center justify-center gap-1.5">
-                <Plus size={18} className="text-[var(--color-brand)]" />
-                <span>Create Account</span>
-              </h2>
-              <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
-                Set up your placement cell staff credentials
-              </p>
-            </div>
-
-            {regError && (
-              <div
-                role="alert"
-                className="rounded-xl bg-rose-50 dark:bg-rose-950/30 border border-rose-200 dark:border-rose-900/40 p-2.5 text-xs font-medium text-rose-700 dark:text-rose-400 flex items-start gap-2"
-              >
-                <AlertTriangle size={15} className="shrink-0 mt-0.5" />
-                <span>{regError}</span>
-              </div>
-            )}
-
-            {/* Full Name / Display Name */}
-            <div>
-              <label className="mb-1 block text-xs font-semibold text-slate-700 dark:text-slate-300">
-                Full Name (Display Name)
-              </label>
-              <div className="relative">
-                <span className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400">
-                  <UserIcon size={14} />
-                </span>
-                <input
-                  type="text"
-                  required
-                  autoFocus
-                  placeholder="e.g. Dr. Rajesh Kumar"
-                  value={regFullName}
-                  onChange={(e) => setRegFullName(e.target.value)}
-                  className="w-full rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50/70 dark:bg-slate-900/60 pl-9 pr-3.5 py-2 text-xs md:text-sm text-slate-900 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-[var(--color-brand)]/20 focus:border-[var(--color-brand)]"
-                />
-              </div>
-            </div>
-
-            {/* Username */}
-            <div>
-              <label className="mb-1 block text-xs font-semibold text-slate-700 dark:text-slate-300">
-                Username
-              </label>
-              <div className="relative">
-                <span className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400">
-                  <UserIcon size={14} />
-                </span>
-                <input
-                  type="text"
-                  required
-                  placeholder="3-20 chars, letters, numbers, _"
-                  value={regUsername}
-                  onChange={(e) => setRegUsername(e.target.value)}
-                  className={clsx(
-                    "w-full rounded-xl border pl-9 pr-3.5 py-2 text-xs md:text-sm bg-slate-50/70 dark:bg-slate-900/60 text-slate-900 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-[var(--color-brand)]/20 focus:border-[var(--color-brand)]",
-                    isUsernameTaken
-                      ? "border-rose-500"
-                      : isUsernameValid
-                      ? "border-emerald-500"
-                      : "border-slate-200 dark:border-slate-800"
-                  )}
-                />
-              </div>
-              {regUsername && (
-                <p
-                  className={clsx(
-                    "mt-1 text-[10px] font-semibold",
-                    isUsernameTaken
-                      ? "text-rose-500"
-                      : isUsernameValid
-                      ? "text-emerald-600"
-                      : "text-slate-400"
-                  )}
-                >
-                  {isUsernameTaken
-                    ? "Username already taken"
-                    : isUsernameValid
-                    ? "✓ Username available"
-                    : "3-20 characters, alphanumeric and underscore only"}
-                </p>
-              )}
-            </div>
-
-            {/* Role */}
-            <div>
-              <label className="mb-1 block text-xs font-semibold text-slate-700 dark:text-slate-300">
-                Role
-              </label>
-              <select
-                value={regRole}
-                onChange={(e) => setRegRole(e.target.value as Role)}
-                className="w-full rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50/70 dark:bg-slate-900/60 px-3 py-2 text-xs md:text-sm text-slate-900 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-[var(--color-brand)]/20 focus:border-[var(--color-brand)]"
-              >
-                <option value="Placement Officer">Placement Officer</option>
-                <option value="Assistant">Assistant</option>
-                <option value="Admin">Admin</option>
-              </select>
-            </div>
-
-            {/* Password with Strength Meter */}
-            <div>
-              <label className="mb-1 block text-xs font-semibold text-slate-700 dark:text-slate-300">
-                Password
-              </label>
-              <div className="relative">
-                <span className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400">
-                  <Lock size={14} />
-                </span>
-                <input
-                  type={showRegPassword ? "text" : "password"}
-                  required
-                  placeholder="Create a strong password"
-                  value={regPassword}
-                  onChange={(e) => setRegPassword(e.target.value)}
-                  className="w-full rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50/70 dark:bg-slate-900/60 pl-9 pr-10 py-2 text-xs md:text-sm text-slate-900 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-[var(--color-brand)]/20 focus:border-[var(--color-brand)]"
-                />
-                <button
-                  type="button"
-                  onClick={() => setShowRegPassword(!showRegPassword)}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200"
-                >
-                  {showRegPassword ? <EyeOff size={15} /> : <Eye size={15} />}
-                </button>
-              </div>
-
-              {/* 5-Bar Strength Meter */}
-              <div className="mt-1.5 space-y-1">
-                <div className="flex gap-1">
-                  {[1, 2, 3, 4, 5].map((idx) => (
-                    <div
-                      key={idx}
-                      className="h-1 flex-1 rounded-full transition-all duration-300"
-                      style={{
-                        backgroundColor:
-                          idx <= regStrength.score ? regStrength.color : "var(--color-border)",
-                      }}
-                    />
-                  ))}
-                </div>
-                {regStrength.label && (
-                  <div className="text-[10px] font-bold" style={{ color: regStrength.color }}>
-                    Strength: {regStrength.label}
-                  </div>
-                )}
-              </div>
-            </div>
-
-            {/* Confirm Password */}
-            <div>
-              <label className="mb-1 block text-xs font-semibold text-slate-700 dark:text-slate-300">
-                Confirm Password
-              </label>
-              <div className="relative">
-                <span className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400">
-                  <KeyRound size={14} />
-                </span>
-                <input
-                  type={showRegConfirmPassword ? "text" : "password"}
-                  required
-                  placeholder="Re-enter password"
-                  value={regConfirmPassword}
-                  onChange={(e) => setRegConfirmPassword(e.target.value)}
-                  className="w-full rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50/70 dark:bg-slate-900/60 pl-9 pr-10 py-2 text-xs md:text-sm text-slate-900 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-[var(--color-brand)]/20 focus:border-[var(--color-brand)]"
-                />
-                <button
-                  type="button"
-                  onClick={() => setShowRegConfirmPassword(!showRegConfirmPassword)}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200"
-                >
-                  {showRegConfirmPassword ? <EyeOff size={15} /> : <Eye size={15} />}
-                </button>
-              </div>
-              {regConfirmPassword && (
-                <p
-                  className={clsx(
-                    "mt-1 text-[10px] font-semibold",
-                    regPassword === regConfirmPassword ? "text-emerald-600" : "text-rose-500"
-                  )}
-                >
-                  {regPassword === regConfirmPassword
-                    ? "✓ Passwords match"
-                    : "Passwords do not match"}
-                </p>
-              )}
-            </div>
-
-            {/* Security Question */}
-            <div>
-              <label className="mb-1 block text-xs font-semibold text-slate-700 dark:text-slate-300">
-                Security Question
-              </label>
-              <select
-                value={regSecurityQuestion}
-                onChange={(e) => setRegSecurityQuestion(e.target.value)}
-                className="w-full rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50/70 dark:bg-slate-900/60 px-3 py-2 text-xs md:text-sm text-slate-900 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-[var(--color-brand)]/20 focus:border-[var(--color-brand)]"
-              >
-                {SECURITY_QUESTIONS.map((q) => (
-                  <option key={q} value={q}>
-                    {q}
-                  </option>
-                ))}
-              </select>
-            </div>
-
-            {/* Security Answer */}
-            <div>
-              <label className="mb-1 block text-xs font-semibold text-slate-700 dark:text-slate-300">
-                Security Answer
-              </label>
-              <input
-                type="text"
-                required
-                placeholder="Your answer (case-insensitive)"
-                value={regSecurityAnswer}
-                onChange={(e) => setRegSecurityAnswer(e.target.value)}
-                className="w-full rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50/70 dark:bg-slate-900/60 px-3.5 py-2 text-xs md:text-sm text-slate-900 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-[var(--color-brand)]/20 focus:border-[var(--color-brand)]"
-              />
-              <p className="mt-1 text-[10px] text-slate-400">
-                💡 Used to verify your identity and recover your password if forgotten.
-              </p>
-            </div>
-
-            {/* Submit Create Account */}
-            <button
-              type="submit"
-              disabled={regLoading}
-              className="mt-3 w-full flex items-center justify-center gap-2 rounded-xl bg-[var(--color-brand)] py-2.5 px-4 text-xs md:text-sm font-semibold text-white shadow-sm hover:bg-[var(--color-brand-hover)] disabled:opacity-50 transition-all"
-            >
-              <Plus size={15} />
-              <span>{regLoading ? "Creating Account..." : "Create Account"}</span>
-            </button>
-
-            {/* Back to Sign In */}
-            <div className="relative my-4">
-              <div className="absolute inset-0 flex items-center">
-                <div className="w-full border-t border-slate-200 dark:border-slate-800" />
-              </div>
-              <div className="relative flex justify-center text-[11px]">
-                <span className="bg-white dark:bg-[#12151d] px-3 text-slate-400 font-medium">
-                  Already have an account?
-                </span>
-              </div>
-            </div>
-
-            <button
-              type="button"
-              onClick={() => {
-                setRegError(null);
-                setAuthMode("signin");
-              }}
-              className="w-full flex items-center justify-center gap-2 rounded-xl border border-slate-200 dark:border-slate-800 py-2.5 px-4 text-xs font-semibold text-slate-700 dark:text-slate-200 hover:border-[var(--color-brand)] hover:text-[var(--color-brand)] dark:hover:border-[var(--color-brand)] dark:hover:text-[var(--color-brand)] transition-all shadow-xs"
-            >
-              <LogIn size={14} />
-              <span>Sign In</span>
-            </button>
-          </form>
-        )}
-
-        {/* Footer */}
-        <p className="mt-5 text-center text-[11px] text-slate-400 dark:text-slate-500">
-          🛡️ All data stored locally in your browser &bull; No external server required
-        </p>
+          {/* Footer note */}
+          <p className="mt-3 text-center text-[10px] text-slate-400 dark:text-slate-500">
+            🛡️ Local cryptographic storage &bull; Zero external cloud dependency
+          </p>
+        </div>
       </div>
 
       {/* ─── MODAL 1: ADMIN MASTER PIN VERIFICATION (from SecureHash Lab) ───── */}
