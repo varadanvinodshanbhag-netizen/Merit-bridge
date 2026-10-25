@@ -20,9 +20,11 @@ if %errorlevel% neq 0 (
     exit /b %errorlevel%
 )
 
-echo [3/3] Copying MeritBridge.exe to project root...
-copy /y "src-tauri\target\release\meritbridge.exe" "..\"
+echo [3/3] Copying MeritBridge.exe and WebView2Loader.dll to project root...
+copy /y "src-tauri\target\release\meritbridge.exe" "..\MeritBridge.exe"
 copy /y "src-tauri\target\release\meritbridge.exe" ".\MeritBridge.exe"
+copy /y "src-tauri\target\release\WebView2Loader.dll" "..\"
+copy /y "src-tauri\target\release\WebView2Loader.dll" ".\"
 
 echo ========================================================
 echo   Build Successful! Executable: MeritBridge.exe
