@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { NavLink, useLocation } from "react-router-dom";
 import clsx from "clsx";
+import { useAuthStore } from "../../store/auth";
 import {
   LayoutDashboard,
   Users,
@@ -26,10 +27,20 @@ const NAV_ITEMS = [
 
 export default function Sidebar() {
   const location = useLocation();
+  const user = useAuthStore((s) => s.user);
   const itemRefs = useRef<(HTMLLIElement | null)[]>([]);
   const [activeRect, setActiveRect] = useState<{ top: number; height: number } | null>(null);
   const [hoverRect, setHoverRect] = useState<{ top: number; height: number } | null>(null);
-  const [isAdminMode, setIsAdminMode] = useState(true);
+
+  const displayName = user?.name || "Placement Officer";
+  const displayRole = user?.role || "Staff";
+  const initials = displayName
+    .split(" ")
+    .filter(Boolean)
+    .map((w) => w[0])
+    .slice(0, 2)
+    .join("")
+    .toUpperCase() || "PO";
 
   // Determine active item index
   const activeIndex = NAV_ITEMS.findIndex((item) => {
@@ -167,50 +178,21 @@ export default function Sidebar() {
         </div>
       </nav>
 
-      {/* Mode / Admin Switch (Exact Uizard visual lockup) */}
-      <div className="px-4 py-3 border-t border-slate-200/80 dark:border-slate-800/60 bg-white/50 dark:bg-transparent">
-        <p className="text-[10px] font-semibold text-slate-400 uppercase tracking-wider mb-1">
-          Mode
-        </p>
-        <div className="flex items-center justify-between">
-          <span className="text-xs font-semibold text-slate-700 dark:text-slate-300">
-            Admin
-          </span>
-          <button
-            type="button"
-            role="switch"
-            aria-checked={isAdminMode}
-            onClick={() => setIsAdminMode(!isAdminMode)}
-            className={clsx(
-              "relative inline-flex h-5 w-9 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-75 ease-in-out focus:outline-none",
-              isAdminMode ? "bg-[#9e2040]" : "bg-slate-300 dark:bg-slate-700"
-            )}
-          >
-            <span
-              className={clsx(
-                "pointer-events-none inline-block h-4 w-4 transform rounded-full bg-white shadow-sm ring-0 transition duration-75 ease-in-out",
-                isAdminMode ? "translate-x-4" : "translate-x-0"
-              )}
-            />
-          </button>
-        </div>
-      </div>
-
-      {/* Account Section (Uizard Bottom User Card) */}
+      {/* Account Section (Bottom User Card) */}
       <div className="px-4 py-3 border-t border-slate-200/80 dark:border-slate-800/80 bg-slate-100/60 dark:bg-slate-900/40">
         <p className="text-[10px] font-semibold text-slate-400 uppercase tracking-wider mb-2">
           Account
         </p>
         <div className="flex items-center gap-2.5">
-          <div className="w-8 h-8 rounded-full bg-gradient-to-tr from-slate-700 to-slate-900 text-white font-bold text-xs flex items-center justify-center shrink-0 shadow-xs border border-slate-500">
-            RM
+          <div className="w-8 h-8 rounded-full bg-gradient-to-tr from-[#9e2040] to-rose-700 text-white font-bold text-xs flex items-center justify-center shrink-0 shadow-xs border border-rose-400/40">
+            {initials}
           </div>
           <div className="min-w-0 leading-tight">
-            <p className="text-xs font-semibold text-slate-900 dark:text-slate-100 truncate">
-              Rohit Malhotra
+            <p className="text-xs font-semibold text-slate-900 dark:text-slate-100 truncate" title={displayName}>
+              {displayName}
             </p>
             <p className="text-[10px] text-slate-500 dark:text-slate-400 truncate">
-              Placement Admin
+              {displayRole}
             </p>
           </div>
         </div>

@@ -63,7 +63,7 @@ export function getRichSampleData(): DatabaseState {
     {
       id: 1,
       username: "admin",
-      display_name: "S. Kumar",
+      display_name: "Placement Administrator",
       role: "Placement Officer" as const,
       password_hash: "admin",
       must_change_password: false,

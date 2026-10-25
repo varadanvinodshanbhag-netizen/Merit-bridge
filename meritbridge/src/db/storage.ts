@@ -101,7 +101,7 @@ export function getInitialData(): DatabaseState {
     {
       id: 1,
       username: "admin",
-      display_name: "S. Kumar",
+      display_name: "Placement Administrator",
       role: "Placement Officer",
       password_hash: "admin", // in mock/dev auth
       must_change_password: false,

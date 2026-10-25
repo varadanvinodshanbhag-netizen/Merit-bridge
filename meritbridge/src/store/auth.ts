@@ -4,9 +4,13 @@ import { db } from "@/db/storage";
 import { verifyPassword, SECURITY_CONFIG } from "@/services/security";
 import { logAudit } from "@/services/audit";
 
-// Clean up any legacy localStorage persistent session so fresh app launch requires login
+// Clean up any legacy or stale persistent session so fresh app launch requires login
 try {
   localStorage.removeItem("mb-session");
+  const currentSession = sessionStorage.getItem("mb-session");
+  if (currentSession && (currentSession.includes("Rohit Malhotra") || currentSession.includes("S. Kumar"))) {
+    sessionStorage.removeItem("mb-session");
+  }
 } catch {
   // Ignore
 }

@@ -369,10 +369,15 @@ export default function LoginPage() {
       return;
     }
 
+    const resolvedDisplayName =
+      user.display_name && user.display_name !== "S. Kumar"
+        ? user.display_name
+        : (user.username === "admin" ? "Placement Administrator" : (user.display_name || "Placement Officer"));
+
     setUser({
       id: user.id,
       username: user.username,
-      name: user.display_name,
+      name: resolvedDisplayName,
       role: user.role,
     });
 
@@ -663,10 +668,15 @@ export default function LoginPage() {
         summary: `Mandatory initial password change completed for user ${mustChangeUser.username}`,
       });
 
+      const resolvedDisplayName =
+        mustChangeUser.display_name && mustChangeUser.display_name !== "S. Kumar"
+          ? mustChangeUser.display_name
+          : (mustChangeUser.username === "admin" ? "Placement Administrator" : (mustChangeUser.display_name || "Placement Officer"));
+
       setUser({
         id: mustChangeUser.id,
         username: mustChangeUser.username,
-        name: mustChangeUser.display_name,
+        name: resolvedDisplayName,
         role: mustChangeUser.role,
       });
 
