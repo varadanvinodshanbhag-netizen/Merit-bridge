@@ -1896,7 +1896,7 @@ export default function SettingsPage() {
                 <input
                   type="text"
                   required
-                  placeholder="e.g. AIDS, ECE, MECH"
+                  placeholder="e.g. ME, AE, EE, CSE"
                   value={newDeptCode}
                   onChange={(e) => setNewDeptCode(e.target.value)}
                   className="w-full px-3 py-2 rounded-lg border border-[var(--color-border)] bg-[var(--color-bg)] font-mono uppercase text-[var(--color-text)]"
@@ -1910,7 +1910,7 @@ export default function SettingsPage() {
                 <input
                   type="text"
                   required
-                  placeholder="e.g. Artificial Intelligence & Data Science"
+                  placeholder="e.g. Automobile Engineering"
                   value={newDeptName}
                   onChange={(e) => setNewDeptName(e.target.value)}
                   className="w-full px-3 py-2 rounded-lg border border-[var(--color-border)] bg-[var(--color-bg)] text-[var(--color-text)]"

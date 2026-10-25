@@ -724,12 +724,13 @@ export default function LoginPage() {
                   MeritBridge
                 </h1>
                 <p className="text-[10px] font-semibold tracking-wider text-rose-200 uppercase">
-                  Placement Terminal
+                  RNS Rural Polytechnic
                 </p>
               </div>
             </div>
             <p className="text-xs text-rose-100/90 leading-relaxed pt-1">
-              Unified campus placements, corporate recruitment drives &amp; batch performance analytics.
+              Placement Cell &bull; Murdeshwar<br />
+              <span className="text-[11px] text-rose-200 font-semibold tracking-wide">Diploma (3 Years): ME &bull; AE &bull; EE &bull; CSE</span>
             </p>
           </div>
 
@@ -740,8 +741,8 @@ export default function LoginPage() {
                 <ShieldCheck size={15} />
               </div>
               <div className="text-left leading-tight">
-                <p className="text-xs font-bold text-white">Salted SHA-256 Crypto</p>
-                <p className="text-[10px] text-rose-200/80 mt-0.5">Client-side password hashing and recovery security</p>
+                <p className="text-xs font-bold text-white">Diploma Batch Roster</p>
+                <p className="text-[10px] text-rose-200/80 mt-0.5">Automated student tracking for ME, AE, EE, &amp; CSE departments</p>
               </div>
             </div>
 
@@ -750,8 +751,8 @@ export default function LoginPage() {
                 <Lock size={15} />
               </div>
               <div className="text-left leading-tight">
-                <p className="text-xs font-bold text-white">Zero Cloud Dependency</p>
-                <p className="text-[10px] text-rose-200/80 mt-0.5">Full offline storage &amp; data privacy compliance</p>
+                <p className="text-xs font-bold text-white">Local Data Sovereignty</p>
+                <p className="text-[10px] text-rose-200/80 mt-0.5">Salted SHA-256 client crypto with zero external cloud dependency</p>
               </div>
             </div>
 
@@ -760,16 +761,16 @@ export default function LoginPage() {
                 <KeyRound size={15} />
               </div>
               <div className="text-left leading-tight">
-                <p className="text-xs font-bold text-white">2-Tier Disaster Recovery</p>
-                <p className="text-[10px] text-rose-200/80 mt-0.5">Security questions with emergency master key override</p>
+                <p className="text-xs font-bold text-white">Campus Recruitment Seam</p>
+                <p className="text-[10px] text-rose-200/80 mt-0.5">Company eligibility filtering, drive workflows &amp; offer tracker</p>
               </div>
             </div>
           </div>
 
           {/* Footer stats */}
           <div className="relative z-10 pt-3 border-t border-white/15 text-[10px] text-rose-200 flex items-center justify-between">
-            <span>Campus Edition</span>
-            <span className="font-mono">v0.1.0</span>
+            <span title="RNS Rural Polytechnic Murdeshwar">Murdeshwar, Karnataka</span>
+            <span className="font-mono">Diploma v0.1.0</span>
           </div>
         </div>
 
@@ -777,14 +778,17 @@ export default function LoginPage() {
         <div className="flex-1 p-5 sm:p-6 lg:p-7 flex flex-col justify-between overflow-y-auto max-h-[92vh] md:max-h-[660px]">
           <div>
             {/* Mobile-only brand banner */}
-            <div className="md:hidden mb-4 flex flex-col items-center gap-2 text-center">
+            <div className="md:hidden mb-4 flex flex-col items-center gap-1.5 text-center">
               <MeritBridgeLogo size={42} className="shadow-md shadow-[#9e2040]/20 rounded-xl" />
               <div>
                 <h1 className="text-xl font-bold tracking-tight text-slate-900 dark:text-slate-100">
                   MeritBridge
                 </h1>
-                <p className="text-[10px] font-semibold uppercase tracking-widest text-[var(--color-brand)]">
-                  Placement Management &amp; Analytics
+                <p className="text-xs font-bold text-[var(--color-brand)]">
+                  RNS Rural Polytechnic, Murdeshwar
+                </p>
+                <p className="text-[10px] text-slate-500 dark:text-slate-400">
+                  Diploma Placement Terminal (ME &bull; AE &bull; EE &bull; CSE)
                 </p>
               </div>
             </div>

@@ -85,11 +85,11 @@ export default function Sidebar() {
           <GraduationCap size={18} />
         </div>
         <div className="min-w-0 leading-tight">
-          <h2 className="truncate text-xs font-bold tracking-tight text-slate-900 dark:text-slate-100">
-            IIT Riverside
+          <h2 className="truncate text-xs font-bold tracking-tight text-slate-900 dark:text-slate-100" title="RNS Rural Polytechnic, Murdeshwar">
+            RNS Rural Polytechnic
           </h2>
           <p className="truncate text-[10px] text-slate-500 dark:text-slate-400">
-            Computer Science
+            Murdeshwar &bull; Diploma (3Y)
           </p>
         </div>
       </div>

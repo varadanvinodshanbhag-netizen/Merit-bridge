@@ -29,34 +29,25 @@ export function getRichSampleData(): DatabaseState {
   const courses = [
     {
       id: 1,
-      name: "Bachelor of Technology",
-      code: "B.Tech",
-      duration_semesters: 8,
-      cgpa_method: "MeanOfSgpa" as const,
-      grade_scale_max: 10,
-    },
-    {
-      id: 2,
-      name: "Master of Computer Applications",
-      code: "MCA",
-      duration_semesters: 4,
+      name: "Diploma in Engineering",
+      code: "Diploma",
+      duration_semesters: 6,
       cgpa_method: "MeanOfSgpa" as const,
       grade_scale_max: 10,
     },
   ];
 
   const departments = [
-    { id: 1, course_id: 1, name: "Computer Science & Engineering", code: "CSE" },
-    { id: 2, course_id: 1, name: "Electronics & Communication", code: "ECE" },
-    { id: 3, course_id: 1, name: "Mechanical Engineering", code: "ME" },
-    { id: 4, course_id: 1, name: "Information Technology", code: "IT" },
-    { id: 5, course_id: 2, name: "Computer Applications", code: "CA" },
+    { id: 1, course_id: 1, name: "Mechanical Engineering", code: "ME" },
+    { id: 2, course_id: 1, name: "Automobile Engineering", code: "AE" },
+    { id: 3, course_id: 1, name: "Electrical & Electronics Engineering", code: "EE" },
+    { id: 4, course_id: 1, name: "Computer Science & Engineering", code: "CSE" },
   ];
 
   const batches = [
-    { id: 1, course_id: 1, label: "2021-2025", admission_year: 2021, passing_year: 2025 },
-    { id: 2, course_id: 1, label: "2022-2026", admission_year: 2022, passing_year: 2026 },
-    { id: 3, course_id: 2, label: "2023-2025", admission_year: 2023, passing_year: 2025 },
+    { id: 1, course_id: 1, label: "2021-2024", admission_year: 2021, passing_year: 2024 },
+    { id: 2, course_id: 1, label: "2022-2025", admission_year: 2022, passing_year: 2025 },
+    { id: 3, course_id: 1, label: "2023-2026", admission_year: 2023, passing_year: 2026 },
   ];
 
   const users = [
@@ -91,9 +82,9 @@ export function getRichSampleData(): DatabaseState {
   ];
 
   const institution = {
-    name: "Apex Institute of Technology",
-    address: "Campus Park, Knowledge City, Bangalore 560001",
-    contact_details: "placement@apexinstitute.edu | +91 80 2345 6789",
+    name: "RNS Rural Polytechnic",
+    address: "Murdeshwar, Bhatkal Taluk, Uttara Kannada, Karnataka - 581350",
+    contact_details: "placement@rnsrp.edu.in | +91 8385 268688",
     current_academic_year_id: 2,
   };
 
@@ -114,50 +105,51 @@ export function getRichSampleData(): DatabaseState {
     backups_to_keep: 10,
   };
 
-  // ─── 40 Diverse Students ──────────────────────────────────────────────────
+  // ─── 40 Diverse Polytechnic Students (ME, AE, EE, CSE) ───────────────────
   const rawStudentData = [
-    { name: "Aarav Reddy", gender: "Male", deptId: 1, batchId: 1, passYear: 2025, cgpa: 9.15, reg: "21CSE001" },
-    { name: "Priya Kapoor", gender: "Female", deptId: 2, batchId: 1, passYear: 2025, cgpa: 9.35, reg: "21ECE014" },
-    { name: "Mohammed Saif", gender: "Male", deptId: 3, batchId: 1, passYear: 2025, cgpa: 7.82, reg: "21ME045" },
-    { name: "Sneha Nair", gender: "Female", deptId: 1, batchId: 1, passYear: 2025, cgpa: 8.65, reg: "21CSE089" },
-    { name: "Rahul Verma", gender: "Male", deptId: 4, batchId: 1, passYear: 2025, cgpa: 8.25, reg: "21IT023" },
-    { name: "Ananya Iyer", gender: "Female", deptId: 1, batchId: 1, passYear: 2025, cgpa: 9.72, reg: "21CSE012" },
-    { name: "Vikram Malhotra", gender: "Male", deptId: 2, batchId: 1, passYear: 2025, cgpa: 7.90, reg: "21ECE032" },
-    { name: "Kavya Deshmukh", gender: "Female", deptId: 3, batchId: 1, passYear: 2025, cgpa: 8.45, reg: "21ME018" },
-    { name: "Rohan Chatterjee", gender: "Male", deptId: 1, batchId: 1, passYear: 2025, cgpa: 8.88, reg: "21CSE045" },
-    { name: "Divya Srinivasan", gender: "Female", deptId: 4, batchId: 1, passYear: 2025, cgpa: 9.05, reg: "21IT008" },
-    { name: "Aditya Joshi", gender: "Male", deptId: 2, batchId: 1, passYear: 2025, cgpa: 6.95, reg: "21ECE077" },
-    { name: "Pooja Hegde", gender: "Female", deptId: 1, batchId: 1, passYear: 2025, cgpa: 7.45, reg: "21CSE102" },
-    { name: "Karthik Pillai", gender: "Male", deptId: 3, batchId: 1, passYear: 2025, cgpa: 8.12, reg: "21ME064" },
-    { name: "Neha Saxena", gender: "Female", deptId: 2, batchId: 1, passYear: 2025, cgpa: 8.78, reg: "21ECE050" },
-    { name: "Tanmay Bansal", gender: "Male", deptId: 4, batchId: 1, passYear: 2025, cgpa: 6.60, reg: "21IT041" },
-    { name: "Rhea Menon", gender: "Female", deptId: 1, batchId: 1, passYear: 2025, cgpa: 9.48, reg: "21CSE067" },
-    { name: "Gaurav Sen", gender: "Male", deptId: 1, batchId: 1, passYear: 2025, cgpa: 8.92, reg: "21CSE033" },
-    { name: "Shreya Ghoshal", gender: "Female", deptId: 2, batchId: 1, passYear: 2025, cgpa: 8.35, reg: "21ECE021" },
-    { name: "Akash Singhal", gender: "Male", deptId: 3, batchId: 1, passYear: 2025, cgpa: 7.20, reg: "21ME035" },
-    { name: "Meera Krishnan", gender: "Female", deptId: 4, batchId: 1, passYear: 2025, cgpa: 8.90, reg: "21IT019" },
-    { name: "Pranav Varma", gender: "Male", deptId: 1, batchId: 1, passYear: 2025, cgpa: 7.75, reg: "21CSE110" },
-    { name: "Simran Kaur", gender: "Female", deptId: 2, batchId: 1, passYear: 2025, cgpa: 9.10, reg: "21ECE065" },
-    { name: "Harsh Vardhan", gender: "Male", deptId: 3, batchId: 1, passYear: 2025, cgpa: 6.85, reg: "21ME088" },
-    { name: "Anwesha Datta", gender: "Female", deptId: 1, batchId: 1, passYear: 2025, cgpa: 9.60, reg: "21CSE005" },
-    { name: "Varun Shenoy", gender: "Male", deptId: 4, batchId: 1, passYear: 2025, cgpa: 8.15, reg: "21IT030" },
-    // Batch 2 (Class of 2026 - Pre-final year)
-    { name: "Ishaan Mehta", gender: "Male", deptId: 1, batchId: 2, passYear: 2026, cgpa: 8.70, reg: "22CSE015" },
-    { name: "Ananya Pandey", gender: "Female", deptId: 2, batchId: 2, passYear: 2026, cgpa: 8.95, reg: "22ECE008" },
-    { name: "Devansh Patel", gender: "Male", deptId: 3, batchId: 2, passYear: 2026, cgpa: 7.55, reg: "22ME022" },
-    { name: "Tara Bhatt", gender: "Female", deptId: 1, batchId: 2, passYear: 2026, cgpa: 9.20, reg: "22CSE042" },
-    { name: "Abhishek Roy", gender: "Male", deptId: 4, batchId: 2, passYear: 2026, cgpa: 8.40, reg: "22IT017" },
-    { name: "Ritika Sethi", gender: "Female", deptId: 1, batchId: 2, passYear: 2026, cgpa: 9.42, reg: "22CSE099" },
-    { name: "Nikhil Kamath", gender: "Male", deptId: 2, batchId: 2, passYear: 2026, cgpa: 7.80, reg: "22ECE054" },
-    { name: "Sanya Mirza", gender: "Female", deptId: 3, batchId: 2, passYear: 2026, cgpa: 8.10, reg: "22ME049" },
-    { name: "Ayush Khurana", gender: "Male", deptId: 4, batchId: 2, passYear: 2026, cgpa: 7.15, reg: "22IT061" },
-    { name: "Nandini Rao", gender: "Female", deptId: 1, batchId: 2, passYear: 2026, cgpa: 8.85, reg: "22CSE078" },
-    // Batch 3 (MCA - Class of 2025)
-    { name: "Deepak Soni", gender: "Male", deptId: 5, batchId: 3, passYear: 2025, cgpa: 8.60, reg: "23MCA004" },
-    { name: "Monika Sharma", gender: "Female", deptId: 5, batchId: 3, passYear: 2025, cgpa: 9.18, reg: "23MCA012" },
-    { name: "Siddharth Rao", gender: "Male", deptId: 5, batchId: 3, passYear: 2025, cgpa: 7.95, reg: "23MCA025" },
-    { name: "Priyanka Gandhi", gender: "Female", deptId: 5, batchId: 3, passYear: 2025, cgpa: 8.45, reg: "23MCA033" },
-    { name: "Manish Tiwari", gender: "Male", deptId: 5, batchId: 3, passYear: 2025, cgpa: 8.05, reg: "23MCA041" },
+    // Batch 2 (Class of 2025 - Final Year Diploma)
+    { name: "Aarav Reddy", gender: "Male", deptId: 1, batchId: 2, passYear: 2025, cgpa: 9.15, reg: "22ME001" },
+    { name: "Priya Kapoor", gender: "Female", deptId: 2, batchId: 2, passYear: 2025, cgpa: 9.35, reg: "22AE002" },
+    { name: "Mohammed Saif", gender: "Male", deptId: 3, batchId: 2, passYear: 2025, cgpa: 7.82, reg: "22EE003" },
+    { name: "Sneha Nair", gender: "Female", deptId: 4, batchId: 2, passYear: 2025, cgpa: 8.65, reg: "22CSE004" },
+    { name: "Rahul Verma", gender: "Male", deptId: 1, batchId: 2, passYear: 2025, cgpa: 8.25, reg: "22ME005" },
+    { name: "Ananya Iyer", gender: "Female", deptId: 4, batchId: 2, passYear: 2025, cgpa: 9.72, reg: "22CSE006" },
+    { name: "Vikram Malhotra", gender: "Male", deptId: 2, batchId: 2, passYear: 2025, cgpa: 7.90, reg: "22AE007" },
+    { name: "Kavya Deshmukh", gender: "Female", deptId: 1, batchId: 2, passYear: 2025, cgpa: 8.45, reg: "22ME008" },
+    { name: "Rohan Chatterjee", gender: "Male", deptId: 4, batchId: 2, passYear: 2025, cgpa: 8.88, reg: "22CSE009" },
+    { name: "Divya Srinivasan", gender: "Female", deptId: 3, batchId: 2, passYear: 2025, cgpa: 9.05, reg: "22EE010" },
+    { name: "Aditya Joshi", gender: "Male", deptId: 3, batchId: 2, passYear: 2025, cgpa: 6.95, reg: "22EE011" },
+    { name: "Pooja Hegde", gender: "Female", deptId: 4, batchId: 2, passYear: 2025, cgpa: 7.45, reg: "22CSE012" },
+    { name: "Karthik Pillai", gender: "Male", deptId: 1, batchId: 2, passYear: 2025, cgpa: 8.12, reg: "22ME013" },
+    { name: "Neha Saxena", gender: "Female", deptId: 2, batchId: 2, passYear: 2025, cgpa: 8.78, reg: "22AE014" },
+    { name: "Tanmay Bansal", gender: "Male", deptId: 3, batchId: 2, passYear: 2025, cgpa: 6.60, reg: "22EE015" },
+    { name: "Rhea Menon", gender: "Female", deptId: 4, batchId: 2, passYear: 2025, cgpa: 9.48, reg: "22CSE016" },
+    { name: "Gaurav Sen", gender: "Male", deptId: 4, batchId: 2, passYear: 2025, cgpa: 8.92, reg: "22CSE017" },
+    { name: "Shreya Ghoshal", gender: "Female", deptId: 2, batchId: 2, passYear: 2025, cgpa: 8.35, reg: "22AE018" },
+    { name: "Akash Singhal", gender: "Male", deptId: 1, batchId: 2, passYear: 2025, cgpa: 7.20, reg: "22ME019" },
+    { name: "Meera Krishnan", gender: "Female", deptId: 3, batchId: 2, passYear: 2025, cgpa: 8.90, reg: "22EE020" },
+    { name: "Pranav Varma", gender: "Male", deptId: 4, batchId: 2, passYear: 2025, cgpa: 7.75, reg: "22CSE021" },
+    { name: "Simran Kaur", gender: "Female", deptId: 2, batchId: 2, passYear: 2025, cgpa: 9.10, reg: "22AE022" },
+    { name: "Harsh Vardhan", gender: "Male", deptId: 1, batchId: 2, passYear: 2025, cgpa: 6.85, reg: "22ME023" },
+    { name: "Anwesha Datta", gender: "Female", deptId: 4, batchId: 2, passYear: 2025, cgpa: 9.60, reg: "22CSE024" },
+    { name: "Varun Shenoy", gender: "Male", deptId: 3, batchId: 2, passYear: 2025, cgpa: 8.15, reg: "22EE025" },
+    // Batch 3 (Class of 2026 - Pre-final year Diploma)
+    { name: "Ishaan Mehta", gender: "Male", deptId: 4, batchId: 3, passYear: 2026, cgpa: 8.70, reg: "23CSE026" },
+    { name: "Ananya Pandey", gender: "Female", deptId: 2, batchId: 3, passYear: 2026, cgpa: 8.95, reg: "23AE027" },
+    { name: "Devansh Patel", gender: "Male", deptId: 1, batchId: 3, passYear: 2026, cgpa: 7.55, reg: "23ME028" },
+    { name: "Tara Bhatt", gender: "Female", deptId: 4, batchId: 3, passYear: 2026, cgpa: 9.20, reg: "23CSE029" },
+    { name: "Abhishek Roy", gender: "Male", deptId: 3, batchId: 3, passYear: 2026, cgpa: 8.40, reg: "23EE030" },
+    { name: "Ritika Sethi", gender: "Female", deptId: 4, batchId: 3, passYear: 2026, cgpa: 9.42, reg: "23CSE031" },
+    { name: "Nikhil Kamath", gender: "Male", deptId: 2, batchId: 3, passYear: 2026, cgpa: 7.80, reg: "23AE032" },
+    { name: "Sanya Mirza", gender: "Female", deptId: 1, batchId: 3, passYear: 2026, cgpa: 8.10, reg: "23ME033" },
+    { name: "Ayush Khurana", gender: "Male", deptId: 3, batchId: 3, passYear: 2026, cgpa: 7.15, reg: "23EE034" },
+    { name: "Nandini Rao", gender: "Female", deptId: 4, batchId: 3, passYear: 2026, cgpa: 8.85, reg: "23CSE035" },
+    // Batch 1 (Class of 2024 - Graduated Diploma Batch)
+    { name: "Deepak Soni", gender: "Male", deptId: 1, batchId: 1, passYear: 2024, cgpa: 8.60, reg: "21ME036" },
+    { name: "Monika Sharma", gender: "Female", deptId: 2, batchId: 1, passYear: 2024, cgpa: 9.18, reg: "21AE037" },
+    { name: "Siddharth Rao", gender: "Male", deptId: 3, batchId: 1, passYear: 2024, cgpa: 7.95, reg: "21EE038" },
+    { name: "Priyanka Gandhi", gender: "Female", deptId: 4, batchId: 1, passYear: 2024, cgpa: 8.45, reg: "21CSE039" },
+    { name: "Manish Tiwari", gender: "Male", deptId: 1, batchId: 1, passYear: 2024, cgpa: 8.05, reg: "21ME040" },
   ];
 
   const students: Student[] = rawStudentData.map((s, idx) => ({
@@ -165,9 +157,9 @@ export function getRichSampleData(): DatabaseState {
     registration_number: s.reg,
     full_name: s.name,
     gender: s.gender as any,
-    email: `${s.name.toLowerCase().replace(/\s+/g, ".")}@student.apexinstitute.edu`,
+    email: `${s.name.toLowerCase().replace(/\s+/g, ".")}@student.rnsrp.edu.in`,
     phone: `+91 98${Math.floor(10000000 + Math.random() * 90000000)}`,
-    course_id: s.deptId === 5 ? 2 : 1,
+    course_id: 1, // Only Diploma in Engineering (3 Years)
     department_id: s.deptId,
     batch_id: s.batchId,
     passing_year: s.passYear,
@@ -184,7 +176,7 @@ export function getRichSampleData(): DatabaseState {
   let nextSemId = 1;
 
   for (const st of students) {
-    const semCount = st.passing_year === 2025 ? (st.course_id === 2 ? 3 : 6) : 4;
+    const semCount = st.passing_year === 2024 ? 6 : (st.passing_year === 2025 ? 5 : 3);
     for (let sem = 1; sem <= semCount; sem++) {
       const sId = nextSemId++;
       const baseMark = Math.min(98, Math.max(55, Math.round(st.cgpa! * 9.5 + (Math.random() * 8 - 4))));

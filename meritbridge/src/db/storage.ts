@@ -67,34 +67,25 @@ export function getInitialData(): DatabaseState {
   const courses: Course[] = [
     {
       id: 1,
-      name: "Bachelor of Technology",
-      code: "B.Tech",
-      duration_semesters: 8,
-      cgpa_method: "MeanOfSgpa",
-      grade_scale_max: 10,
-    },
-    {
-      id: 2,
-      name: "Master of Computer Applications",
-      code: "MCA",
-      duration_semesters: 4,
+      name: "Diploma in Engineering",
+      code: "Diploma",
+      duration_semesters: 6,
       cgpa_method: "MeanOfSgpa",
       grade_scale_max: 10,
     },
   ];
 
   const departments: Department[] = [
-    { id: 1, course_id: 1, name: "Computer Science & Engineering", code: "CSE" },
-    { id: 2, course_id: 1, name: "Electronics & Communication", code: "ECE" },
-    { id: 3, course_id: 1, name: "Mechanical Engineering", code: "ME" },
-    { id: 4, course_id: 1, name: "Information Technology", code: "IT" },
-    { id: 5, course_id: 2, name: "Computer Applications", code: "CA" },
+    { id: 1, course_id: 1, name: "Mechanical Engineering", code: "ME" },
+    { id: 2, course_id: 1, name: "Automobile Engineering", code: "AE" },
+    { id: 3, course_id: 1, name: "Electrical & Electronics Engineering", code: "EE" },
+    { id: 4, course_id: 1, name: "Computer Science & Engineering", code: "CSE" },
   ];
 
   const batches: Batch[] = [
-    { id: 1, course_id: 1, label: "2021-2025", admission_year: 2021, passing_year: 2025 },
-    { id: 2, course_id: 1, label: "2022-2026", admission_year: 2022, passing_year: 2026 },
-    { id: 3, course_id: 2, label: "2023-2025", admission_year: 2023, passing_year: 2025 },
+    { id: 1, course_id: 1, label: "2021-2024", admission_year: 2021, passing_year: 2024 },
+    { id: 2, course_id: 1, label: "2022-2025", admission_year: 2022, passing_year: 2025 },
+    { id: 3, course_id: 1, label: "2023-2026", admission_year: 2023, passing_year: 2026 },
   ];
 
   const users: User[] = [
@@ -120,9 +111,9 @@ export function getInitialData(): DatabaseState {
   };
 
   const institution: Institution = {
-    name: "Apex Institute of Technology",
-    address: "Campus Park, Knowledge City, Bangalore 560001",
-    contact_details: "placement@apexinstitute.edu | +91 80 2345 6789",
+    name: "RNS Rural Polytechnic",
+    address: "Murdeshwar, Bhatkal Taluk, Uttara Kannada, Karnataka - 581350",
+    contact_details: "placement@rnsrp.edu.in | +91 8385 268688",
     current_academic_year_id: 2,
   };
 
@@ -138,18 +129,18 @@ export function getInitialData(): DatabaseState {
     backups_to_keep: 10,
   };
 
-  // Seed Students (matching UI screenshot)
+  // Seed Students (RNS Rural Polytechnic Murdeshwar - ME, AE, EE, CSE)
   const students: Student[] = [
     {
       id: 1,
-      registration_number: "21CSE001",
+      registration_number: "22ME014",
       full_name: "Aarav Reddy",
       gender: "Male",
-      email: "aarav.reddy@student.apexinstitute.edu",
+      email: "aarav.reddy@student.rnsrp.edu.in",
       phone: "+91 98765 43210",
       course_id: 1,
-      department_id: 1,
-      batch_id: 1,
+      department_id: 1, // ME
+      batch_id: 2,
       passing_year: 2025,
       cgpa: 8.85,
       created_at: now,
@@ -159,14 +150,14 @@ export function getInitialData(): DatabaseState {
     },
     {
       id: 2,
-      registration_number: "21ECE014",
+      registration_number: "22AE008",
       full_name: "Priya Kapoor",
       gender: "Female",
-      email: "priya.kapoor@student.apexinstitute.edu",
+      email: "priya.kapoor@student.rnsrp.edu.in",
       phone: "+91 98765 43211",
       course_id: 1,
-      department_id: 2,
-      batch_id: 1,
+      department_id: 2, // AE
+      batch_id: 2,
       passing_year: 2025,
       cgpa: 9.12,
       created_at: now,
@@ -176,14 +167,14 @@ export function getInitialData(): DatabaseState {
     },
     {
       id: 3,
-      registration_number: "21ME045",
+      registration_number: "22EE021",
       full_name: "Mohammed Saif",
       gender: "Male",
-      email: "mohammed.saif@student.apexinstitute.edu",
+      email: "mohammed.saif@student.rnsrp.edu.in",
       phone: "+91 98765 43212",
       course_id: 1,
-      department_id: 3,
-      batch_id: 1,
+      department_id: 3, // EE
+      batch_id: 2,
       passing_year: 2025,
       cgpa: 7.95,
       created_at: now,
@@ -193,14 +184,14 @@ export function getInitialData(): DatabaseState {
     },
     {
       id: 4,
-      registration_number: "21CSE089",
+      registration_number: "22CSE035",
       full_name: "Sneha Nair",
       gender: "Female",
-      email: "sneha.nair@student.apexinstitute.edu",
+      email: "sneha.nair@student.rnsrp.edu.in",
       phone: "+91 98765 43213",
       course_id: 1,
-      department_id: 1,
-      batch_id: 1,
+      department_id: 4, // CSE
+      batch_id: 2,
       passing_year: 2025,
       cgpa: 8.40,
       created_at: now,
@@ -210,14 +201,14 @@ export function getInitialData(): DatabaseState {
     },
     {
       id: 5,
-      registration_number: "21IT023",
+      registration_number: "22ME042",
       full_name: "Rahul Verma",
       gender: "Male",
-      email: "rahul.verma@student.apexinstitute.edu",
+      email: "rahul.verma@student.rnsrp.edu.in",
       phone: "+91 98765 43214",
       course_id: 1,
-      department_id: 4,
-      batch_id: 1,
+      department_id: 1, // ME
+      batch_id: 2,
       passing_year: 2025,
       cgpa: 8.15,
       created_at: now,
@@ -728,8 +719,12 @@ class LocalDatabase {
       const serialized = localStorage.getItem(STORAGE_KEY);
       if (serialized) {
         const parsed = JSON.parse(serialized);
-        // Auto-upgrade if database has only initial 5 students
-        if (parsed.students && parsed.students.length <= 5) {
+        // Auto-upgrade to RNS Rural Polytechnic Murdeshwar schema (Diploma 3Y, ME/AE/EE/CSE)
+        if (
+          !parsed.institution?.name?.includes("RNS") ||
+          parsed.courses?.some((c: any) => c.code === "B.Tech" || c.code === "MCA") ||
+          (parsed.students && parsed.students.length <= 5)
+        ) {
           const sample = getRichSampleData();
           this.persist(sample);
           return sample;
