@@ -1,0 +1,124 @@
+@import "tailwindcss/base";
+@import "tailwindcss/components";
+@import "tailwindcss/utilities";
+
+/* ─── MeritBridge design tokens ─── */
+:root {
+  /* Brand */
+  --color-brand:         #9e2040;
+  --color-brand-hover:   #7f1a33;
+  --color-brand-light:   #fbe8ec;
+
+  /* Surface */
+  --color-bg:            #f4f6f9;
+  --color-surface:       #ffffff;
+  --color-surface-2:     #f1f3f5;
+  --color-border:        #e2e8f0;
+
+  /* Text */
+  --color-text:          #111827;
+  --color-text-muted:    #6b7280;
+  --color-text-inverse:  #ffffff;
+
+  /* Sidebar */
+  --color-sidebar-bg:    #ffffff;
+  --color-sidebar-text:  #374151;
+  --color-sidebar-active:#9e2040;
+
+  /* Status chips */
+  --color-selected:      #d1fae5;
+  --color-selected-text: #065f46;
+  --color-offered:       #dbeafe;
+  --color-offered-text:  #1e40af;
+  --color-applied:       #f3f4f6;
+  --color-applied-text:  #374151;
+  --color-scheduled:     #fef9c3;
+  --color-scheduled-text:#92400e;
+  --color-joined:        #ede9fe;
+  --color-joined-text:   #5b21b6;
+}
+
+.dark {
+  --color-bg:            #0f1117;
+  --color-surface:       #1a1d27;
+  --color-surface-2:     #232634;
+  --color-border:        #2e3348;
+
+  --color-text:          #f0f2f5;
+  --color-text-muted:    #8b92a5;
+  --color-text-inverse:  #ffffff;
+
+  --color-sidebar-bg:    #1a1d27;
+  --color-sidebar-text:  #c8cdd8;
+  --color-sidebar-active:#9e2040;
+
+  --color-selected:      #064e3b;
+  --color-selected-text: #6ee7b7;
+  --color-offered:       #1e3a5f;
+  --color-offered-text:  #93c5fd;
+  --color-applied:       #2e3348;
+  --color-applied-text:  #c8cdd8;
+  --color-scheduled:     #4b3900;
+  --color-scheduled-text:#fde68a;
+  --color-joined:        #3b0764;
+  --color-joined-text:   #c4b5fd;
+}
+
+/* ─── Base resets ─── */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  height: 100%;
+}
+
+body {
+  height: 100%;
+  margin: 0;
+  font-family: "Inter", ui-sans-serif, system-ui, sans-serif;
+  background-color: var(--color-bg);
+  color: var(--color-text);
+  -webkit-font-smoothing: antialiased;
+}
+
+#root {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ─── Scrollbars ─── */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: var(--color-border);
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-text-muted);
+}
+
+/* ─── Focus ring ─── */
+:focus-visible {
+  outline: 2px solid var(--color-brand);
+  outline-offset: 2px;
+}
+
+/* ─── Card Shake Animation (from SecureHash Lab) ─── */
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  20%, 60% { transform: translateX(-6px); }
+  40%, 80% { transform: translateX(6px); }
+}
+
+.shake {
+  animation: shake 0.4s ease;
+}
