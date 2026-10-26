@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",
-    "build:exe": "npm run build && cargo build --release --manifest-path src-tauri/Cargo.toml && powershell -Command \"Copy-Item src-tauri/target/release/meritbridge.exe ../MeritBridge.exe -Force; Copy-Item src-tauri/target/release/WebView2Loader.dll ../WebView2Loader.dll -Force; Copy-Item src-tauri/target/release/meritbridge.exe ./MeritBridge.exe -Force; Copy-Item src-tauri/target/release/WebView2Loader.dll ./WebView2Loader.dll -Force\"",
+    "build:exe": "npx tauri build --no-bundle && powershell -Command \"Copy-Item src-tauri/target/release/meritbridge.exe ../MeritBridge.exe -Force; Copy-Item src-tauri/target/release/WebView2Loader.dll ../WebView2Loader.dll -Force; Copy-Item src-tauri/target/release/meritbridge.exe ./MeritBridge.exe -Force; Copy-Item src-tauri/target/release/WebView2Loader.dll ./WebView2Loader.dll -Force\"",
     "preview": "vite preview",
     "tauri": "tauri"
   },
