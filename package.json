@@ -1,0 +1,9 @@
+{
+  "name": "meritbridge-workspace",
+  "private": true,
+  "scripts": {
+    "dev": "npm --prefix meritbridge run dev",
+    "build": "npm --prefix meritbridge run build",
+    "preview": "npm --prefix meritbridge run preview"
+  }
+}

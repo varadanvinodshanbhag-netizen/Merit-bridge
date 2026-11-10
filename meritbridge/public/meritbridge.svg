@@ -1,0 +1,12 @@
+<svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- MeritBridge logo: stylised "MB" bridge arc on burgundy tile -->
+  <rect width="32" height="32" rx="6" fill="#9e2040"/>
+  <!-- Bridge arch -->
+  <path d="M6 22 Q16 8 26 22" stroke="white" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+  <!-- Bridge deck -->
+  <line x1="4" y1="22" x2="28" y2="22" stroke="white" stroke-width="2.5" stroke-linecap="round"/>
+  <!-- Left pillar -->
+  <line x1="9" y1="22" x2="9" y2="26" stroke="white" stroke-width="2" stroke-linecap="round"/>
+  <!-- Right pillar -->
+  <line x1="23" y1="22" x2="23" y2="26" stroke="white" stroke-width="2" stroke-linecap="round"/>
+</svg>

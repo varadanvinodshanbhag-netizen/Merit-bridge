@@ -1,0 +1,125 @@
+@import "tailwindcss/base";
+@import "tailwindcss/components";
+@import "tailwindcss/utilities";
+
+/* ─── MeritBridge unslop tokens (Graphite ramp + Oxblood brand) ─── */
+:root {
+  /* Brand */
+  --color-brand:         #9e2040;
+  --color-brand-hover:   #7f1a33;
+  --color-brand-light:   #fbe8ec;
+
+  /* Surfaces (Light Graphite) */
+  --color-bg:            #fafafa;
+  --color-surface:       #ffffff;
+  --color-surface-2:     #f4f4f5;
+  --color-sidebar-bg:    #ffffff;
+  --color-border:        rgba(23, 23, 23, 0.08);
+
+  /* Text roles (3 deliberate roles) */
+  --color-text:          #171717;
+  --color-text-secondary:#525252;
+  --color-text-muted:    #737373;
+  --color-text-inverse:  #ffffff;
+
+  /* Sidebar */
+  --color-sidebar-text:  #525252;
+  --color-sidebar-active:#171717;
+
+  /* Status chips (Toned semantic) */
+  --color-selected:      #e6f7ef;
+  --color-selected-text: #16a34a;
+  --color-offered:       #eff6ff;
+  --color-offered-text:  #1e40af;
+  --color-applied:       #f4f4f5;
+  --color-applied-text:  #525252;
+  --color-scheduled:     #fefce8;
+  --color-scheduled-text:#854d0e;
+  --color-joined:        #f5f3ff;
+  --color-joined-text:   #6b21a8;
+}
+
+.dark {
+  /* Surfaces (Dark Graphite) */
+  --color-bg:            #141415;
+  --color-surface:       #19191b;
+  --color-surface-2:     #232325;
+  --color-sidebar-bg:    #0f0f10;
+  --color-border:        rgba(237, 237, 237, 0.08);
+
+  /* Text roles */
+  --color-text:          #ededed;
+  --color-text-secondary:#a1a1a6;
+  --color-text-muted:    #85858b;
+  --color-text-inverse:  #ffffff;
+
+  /* Sidebar */
+  --color-sidebar-text:  #a1a1a6;
+  --color-sidebar-active:#ededed;
+
+  /* Status chips (Toned semantic) */
+  --color-selected:      #0b291b;
+  --color-selected-text: #4cc38a;
+  --color-offered:       #112338;
+  --color-offered-text:  #93c5fd;
+  --color-applied:       #232325;
+  --color-applied-text:  #a1a1a6;
+  --color-scheduled:     #2e220a;
+  --color-scheduled-text:#fde68a;
+  --color-joined:        #29183b;
+  --color-joined-text:   #d8b4fe;
+}
+
+/* ─── Base resets ─── */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  height: 100%;
+}
+
+body {
+  height: 100%;
+  margin: 0;
+  font-family: "Inter", ui-sans-serif, system-ui, sans-serif;
+  background-color: var(--color-bg);
+  color: var(--color-text);
+  -webkit-font-smoothing: antialiased;
+  font-feature-settings: "cv02", "cv03", "cv04", "cv11", "tnum";
+}
+
+#root {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Tabular numbers for all numbers/metrics */
+.tabular-nums {
+  font-variant-numeric: tabular-nums;
+}
+
+/* ─── Scrollbars ─── */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: var(--color-border);
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-text-muted);
+}
+
+/* ─── Focus ring ─── */
+:focus-visible {
+  outline: 2px solid var(--color-brand);
+  outline-offset: 2px;
+}
