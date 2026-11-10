@@ -152,23 +152,57 @@ export function getRichSampleData(): DatabaseState {
     { name: "Manish Tiwari", gender: "Male", deptId: 1, batchId: 1, passYear: 2024, cgpa: 8.05, reg: "21ME040" },
   ];
 
-  const students: Student[] = rawStudentData.map((s, idx) => ({
-    id: idx + 1,
-    registration_number: s.reg,
-    full_name: s.name,
-    gender: s.gender as any,
-    email: `${s.name.toLowerCase().replace(/\s+/g, ".")}@student.rnsrp.edu.in`,
-    phone: `+91 98${Math.floor(10000000 + Math.random() * 90000000)}`,
-    course_id: 1, // Only Diploma in Engineering (3 Years)
-    department_id: s.deptId,
-    batch_id: s.batchId,
-    passing_year: s.passYear,
-    cgpa: s.cgpa,
-    created_at: now,
-    updated_at: now,
-    created_by: 1,
-    updated_by: 1,
-  }));
+  const internshipCompaniesByDept: Record<number, { company: string; role: string; duration: string }[]> = {
+    1: [
+      { company: "Bosch Rexroth", role: "Industrial Automation Trainee", duration: "6 Months" },
+      { company: "Tata Motors", role: "CAD Design Intern", duration: "4 Months" },
+      { company: "L&T Heavy Engineering", role: "Production Quality Intern", duration: "6 Months" },
+    ],
+    2: [
+      { company: "Mahindra & Mahindra", role: "Chassis & Powertrain Intern", duration: "5 Months" },
+      { company: "Tata Motors", role: "Vehicle Testing Intern", duration: "4 Months" },
+      { company: "Toyota Kirloskar", role: "Assembly Line Trainee", duration: "6 Months" },
+    ],
+    3: [
+      { company: "Schneider Electric", role: "Electrical Systems Trainee", duration: "4 Months" },
+      { company: "ABB India", role: "Substation Automation Intern", duration: "6 Months" },
+      { company: "Siemens Energy", role: "Control Panel Engineer Intern", duration: "5 Months" },
+    ],
+    4: [
+      { company: "Zoho Corporation", role: "Software Development Intern", duration: "6 Months" },
+      { company: "Infosys", role: "Cloud Support Trainee", duration: "3 Months" },
+      { company: "Microsoft IDC", role: "Software Engineering Intern", duration: "6 Months" },
+      { company: "Wipro", role: "QA Automation Intern", duration: "4 Months" },
+    ],
+  };
+
+  const students: Student[] = rawStudentData.map((s, idx) => {
+    const deptInternships = internshipCompaniesByDept[s.deptId] || [];
+    const internshipChoice = deptInternships[idx % (deptInternships.length || 1)];
+    const statusCycle = idx % 3 === 0 ? "Active" : idx % 3 === 1 ? "Completed" : "None";
+
+    return {
+      id: idx + 1,
+      registration_number: s.reg,
+      full_name: s.name,
+      gender: s.gender as any,
+      email: `${s.name.toLowerCase().replace(/\s+/g, ".")}@student.rnsrp.edu.in`,
+      phone: `+91 98${Math.floor(10000000 + Math.random() * 90000000)}`,
+      course_id: 1, // Only Diploma in Engineering (3 Years)
+      department_id: s.deptId,
+      batch_id: s.batchId,
+      passing_year: s.passYear,
+      cgpa: s.cgpa,
+      internship_status: statusCycle,
+      internship_company: statusCycle !== "None" && internshipChoice ? internshipChoice.company : undefined,
+      internship_role: statusCycle !== "None" && internshipChoice ? internshipChoice.role : undefined,
+      internship_duration: statusCycle !== "None" && internshipChoice ? internshipChoice.duration : undefined,
+      created_at: now,
+      updated_at: now,
+      created_by: 1,
+      updated_by: 1,
+    };
+  });
 
   // ─── Semester Records Generator ───────────────────────────────────────────
   const semester_records: SemesterRecord[] = [];
@@ -288,6 +322,7 @@ export function getRichSampleData(): DatabaseState {
       website: "https://www.microsoft.com",
       location: "Hyderabad & Bangalore",
       status: "Active",
+      department_ids: [4], // CSE
       contacts: [
         {
           id: 1,
@@ -321,6 +356,7 @@ export function getRichSampleData(): DatabaseState {
       website: "https://about.google",
       location: "Bangalore & Hyderabad",
       status: "Active",
+      department_ids: [4], // CSE
       contacts: [
         {
           id: 2,
@@ -354,6 +390,7 @@ export function getRichSampleData(): DatabaseState {
       website: "https://www.amazon.jobs",
       location: "Hyderabad, India",
       status: "Active",
+      department_ids: [3, 4], // EE, CSE
       contacts: [
         {
           id: 3,
@@ -387,6 +424,7 @@ export function getRichSampleData(): DatabaseState {
       website: "https://www.qualcomm.com",
       location: "Bangalore, India",
       status: "Active",
+      department_ids: [3, 4], // EE, CSE
       contacts: [
         {
           id: 4,
@@ -420,6 +458,7 @@ export function getRichSampleData(): DatabaseState {
       website: "https://www2.deloitte.com",
       location: "Mumbai & Hyderabad",
       status: "Active",
+      department_ids: [4], // CSE
       contacts: [
         {
           id: 5,
@@ -453,6 +492,7 @@ export function getRichSampleData(): DatabaseState {
       website: "https://www.tcs.com",
       location: "Mumbai, India",
       status: "Active",
+      department_ids: [1, 2, 3, 4], // ME, AE, EE, CSE
       contacts: [
         {
           id: 6,
@@ -486,6 +526,7 @@ export function getRichSampleData(): DatabaseState {
       website: "https://www.infosys.com",
       location: "Bangalore, India",
       status: "Active",
+      department_ids: [3, 4], // EE, CSE
       contacts: [
         {
           id: 7,
@@ -519,6 +560,7 @@ export function getRichSampleData(): DatabaseState {
       website: "https://www.accenture.com",
       location: "Dublin / Bangalore",
       status: "Active",
+      department_ids: [3, 4], // EE, CSE
       contacts: [
         {
           id: 8,
@@ -552,6 +594,7 @@ export function getRichSampleData(): DatabaseState {
       website: "https://www.larsentoubro.com",
       location: "Mumbai, India",
       status: "Active",
+      department_ids: [1, 2, 3], // ME, AE, EE
       contacts: [
         {
           id: 9,
@@ -585,6 +628,7 @@ export function getRichSampleData(): DatabaseState {
       website: "https://www.capgemini.com",
       location: "Paris / Pune",
       status: "Active",
+      department_ids: [3, 4], // EE, CSE
       contacts: [
         {
           id: 10,
@@ -615,27 +659,30 @@ export function getRichSampleData(): DatabaseState {
   // ─── Criteria Sets ────────────────────────────────────────────────────────
   const criteria_sets: CriteriaSet[] = [
     {
-      id: 1, // High cutoff (Google, Microsoft)
+      id: 1, // High cutoff (Google, Microsoft) - CSE only
       rules: [
         { id: 1, criteria_set_id: 1, rule_type: "MIN_CGPA", numeric_value: 8.5 },
         { id: 2, criteria_set_id: 1, rule_type: "MAX_ACTIVE_BACKLOGS", numeric_value: 0 },
         { id: 3, criteria_set_id: 1, rule_type: "ALLOWED_PASSING_YEARS", numeric_value: 2025 },
+        { id: 4, criteria_set_id: 1, rule_type: "ALLOWED_DEPARTMENTS", item_ids: [4] },
       ],
     },
     {
-      id: 2, // Medium cutoff (Amazon, Qualcomm, Deloitte)
+      id: 2, // Medium cutoff (Amazon, Qualcomm, Deloitte) - EE & CSE
       rules: [
-        { id: 4, criteria_set_id: 2, rule_type: "MIN_CGPA", numeric_value: 7.5 },
-        { id: 5, criteria_set_id: 2, rule_type: "MAX_ACTIVE_BACKLOGS", numeric_value: 0 },
-        { id: 6, criteria_set_id: 2, rule_type: "ALLOWED_PASSING_YEARS", numeric_value: 2025 },
+        { id: 5, criteria_set_id: 2, rule_type: "MIN_CGPA", numeric_value: 7.5 },
+        { id: 6, criteria_set_id: 2, rule_type: "MAX_ACTIVE_BACKLOGS", numeric_value: 0 },
+        { id: 7, criteria_set_id: 2, rule_type: "ALLOWED_PASSING_YEARS", numeric_value: 2025 },
+        { id: 8, criteria_set_id: 2, rule_type: "ALLOWED_DEPARTMENTS", item_ids: [3, 4] },
       ],
     },
     {
-      id: 3, // Standard mass/core cutoff (TCS, Infosys, Accenture, L&T, Capgemini)
+      id: 3, // Standard mass/core cutoff (TCS, Infosys, Accenture, L&T, Capgemini) - All Departments
       rules: [
-        { id: 7, criteria_set_id: 3, rule_type: "MIN_CGPA", numeric_value: 6.5 },
-        { id: 8, criteria_set_id: 3, rule_type: "MAX_ACTIVE_BACKLOGS", numeric_value: 1 },
-        { id: 9, criteria_set_id: 3, rule_type: "ALLOWED_PASSING_YEARS", numeric_value: 2025 },
+        { id: 9, criteria_set_id: 3, rule_type: "MIN_CGPA", numeric_value: 6.5 },
+        { id: 10, criteria_set_id: 3, rule_type: "MAX_ACTIVE_BACKLOGS", numeric_value: 1 },
+        { id: 11, criteria_set_id: 3, rule_type: "ALLOWED_PASSING_YEARS", numeric_value: 2025 },
+        { id: 12, criteria_set_id: 3, rule_type: "ALLOWED_DEPARTMENTS", item_ids: [1, 2, 3, 4] },
       ],
     },
   ];

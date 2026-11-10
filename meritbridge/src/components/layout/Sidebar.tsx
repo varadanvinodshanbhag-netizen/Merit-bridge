@@ -12,12 +12,14 @@ import {
   FileText,
   Settings,
   GraduationCap,
+  Award,
 } from "lucide-react";
 
 const NAV_ITEMS = [
   { to: "/dashboard",   label: "Dashboard",        Icon: LayoutDashboard },
   { to: "/companies",   label: "Company Listings",  Icon: Building2       },
   { to: "/students",    label: "Student Tracker",   Icon: Users           },
+  { to: "/internships", label: "Internships",       Icon: Award           },
   { to: "/drives",      label: "Placement Drives",  Icon: Briefcase       },
   { to: "/interviews",  label: "Interviews",        Icon: CalendarCheck   },
   { to: "/analytics",  label: "Analytics",         Icon: BarChart3       },
@@ -74,34 +76,36 @@ export default function Sidebar() {
   return (
     <aside
       className={clsx(
-        "flex h-full w-56 flex-col border-r border-slate-200/80 dark:border-slate-800/80",
-        "bg-[#fbfcfd] dark:bg-[#12151d] select-none shrink-0"
+        "flex h-full w-64 flex-col border-r border-[var(--color-border)]",
+        "bg-[var(--color-sidebar-bg)] select-none shrink-0"
       )}
       aria-label="Main navigation"
     >
-      {/* Top institution header (Matching Uizard Prototype) */}
-      <div className="flex items-center gap-3 px-4 py-3.5 border-b border-slate-200/80 dark:border-slate-800/80 bg-white/70 dark:bg-transparent">
-        <div className="w-8 h-8 rounded-lg bg-[var(--color-brand)] flex items-center justify-center text-white font-bold text-sm shadow-xs shrink-0">
-          <GraduationCap size={18} />
+      {/* Institutional header */}
+      <div className="flex items-center gap-3 px-4 py-4 border-b border-[var(--color-border)] bg-[var(--color-surface)] dark:bg-[var(--color-sidebar-bg)]">
+        <div className="w-8 h-8 rounded-lg bg-[var(--color-brand)] flex items-center justify-center text-white shrink-0">
+          <GraduationCap size={16} strokeWidth={1.75} />
         </div>
         <div className="min-w-0 leading-tight">
-          <h2 className="truncate text-xs font-bold tracking-tight text-slate-900 dark:text-slate-100" title="RNS Rural Polytechnic, Murdeshwar">
+          <span className="text-[10px] font-semibold text-[var(--color-brand)] uppercase tracking-wider block">
+            From
+          </span>
+          <h2 className="truncate text-xs font-semibold tracking-tight text-[var(--color-text)]" title="RNS Rural Polytechnic, Murdeshwar">
             RNS Rural Polytechnic
           </h2>
-          <p className="truncate text-[10px] text-slate-500 dark:text-slate-400">
-            Murdeshwar &bull; Diploma (3Y)
+          <p className="truncate text-[11px] text-[var(--color-text-muted)] mt-0.5">
+            Murdeshwar · Diploma (3Y)
           </p>
         </div>
       </div>
 
-      {/* Nav list with LITE SLIDING CARD */}
-      <nav className="flex-1 overflow-y-auto px-2.5 py-3" onMouseLeave={() => setHoverRect(null)}>
-        {/* Relative wrapper using flex flex-col gap-1 (Prevents space-y margin jitter on absolute elements) */}
+      {/* Nav list with quiet active row indicator */}
+      <nav className="flex-1 overflow-y-auto px-3 py-3" onMouseLeave={() => setHoverRect(null)}>
         <div className="relative">
-          {/* Hover glider for inactive items only */}
+          {/* Subtle hover background */}
           {hoverRect && (
             <div
-              className="absolute left-0 right-0 rounded-xl bg-slate-200/50 dark:bg-slate-800/40 transition-[top,height] duration-75 ease-out pointer-events-none"
+              className="absolute left-0 right-0 rounded-lg bg-[var(--color-surface-2)] transition-[top,height] duration-150 ease-unslop pointer-events-none"
               style={{
                 top: `${hoverRect.top}px`,
                 height: `${hoverRect.height}px`,
@@ -110,16 +114,13 @@ export default function Sidebar() {
             />
           )}
 
-          {/* LITE ACTIVE SLIDING CARD - Rock-solid, elevated white card with lite shade */}
+          {/* Active row container */}
           {activeRect && (
             <div
               className={clsx(
-                "absolute left-0 right-0 rounded-xl pointer-events-none",
-                // Lite UI card: elevated pure white in both dark & light modes
-                "bg-white dark:bg-white text-slate-950",
-                "shadow-[0_2px_8px_-1px_rgba(0,0,0,0.1),0_1px_3px_rgba(0,0,0,0.06)] dark:shadow-[0_2px_12px_rgba(0,0,0,0.35)]",
-                "border border-slate-200/90 dark:border-white/20",
-                "transition-[top,height] duration-100 ease-out"
+                "absolute left-0 right-0 rounded-lg pointer-events-none",
+                "bg-[var(--color-surface-2)] border border-[var(--color-border)]",
+                "transition-[top,height] duration-150 ease-unslop"
               )}
               style={{
                 top: `${activeRect.top}px`,
@@ -127,8 +128,8 @@ export default function Sidebar() {
               }}
               aria-hidden="true"
             >
-              {/* Burgundy left accent bar */}
-              <div className="absolute left-1.5 top-2.5 bottom-2.5 w-1 rounded-full bg-[var(--color-brand)]" />
+              {/* Institutional left accent indicator */}
+              <div className="absolute left-1.5 top-2 bottom-2 w-1 rounded-full bg-[var(--color-brand)]" />
             </div>
           )}
 
@@ -140,7 +141,6 @@ export default function Sidebar() {
                   key={to}
                   ref={(el) => (itemRefs.current[idx] = el)}
                   onMouseEnter={(e) => {
-                    // Only show hover glider on inactive items to prevent jitter
                     if (!isActive) {
                       setHoverRect({
                         top: e.currentTarget.offsetTop,
@@ -154,21 +154,24 @@ export default function Sidebar() {
                   <NavLink
                     to={to}
                     className={clsx(
-                      "flex items-center gap-2.5 rounded-xl px-3.5 py-2 text-xs",
-                      "transition-colors duration-75 outline-none font-medium",
+                      "flex items-center gap-2.5 rounded-lg px-3 py-2 text-xs h-9",
+                      "transition-colors duration-150 ease-unslop outline-none",
                       isActive
-                        ? "text-slate-950 font-bold"
-                        : "text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200"
+                        ? "text-[var(--color-text)] font-semibold"
+                        : "text-[var(--color-text-secondary)] hover:text-[var(--color-text)] font-normal"
                     )}
                   >
-                    <Icon
-                      size={15}
-                      aria-hidden="true"
-                      className={clsx(
-                        "shrink-0 transition-colors",
-                        isActive ? "text-[var(--color-brand)]" : "text-slate-400 dark:text-slate-500"
-                      )}
-                    />
+                    <span className="w-5 flex items-center justify-center shrink-0">
+                      <Icon
+                        size={16}
+                        strokeWidth={1.5}
+                        aria-hidden="true"
+                        className={clsx(
+                          "transition-colors",
+                          isActive ? "text-[var(--color-brand)]" : "text-[var(--color-text-muted)]"
+                        )}
+                      />
+                    </span>
                     <span className="truncate">{label}</span>
                   </NavLink>
                 </li>
@@ -178,20 +181,20 @@ export default function Sidebar() {
         </div>
       </nav>
 
-      {/* Account Section (Bottom User Card) */}
-      <div className="px-4 py-3 border-t border-slate-200/80 dark:border-slate-800/80 bg-slate-100/60 dark:bg-slate-900/40">
-        <p className="text-[10px] font-semibold text-slate-400 uppercase tracking-wider mb-2">
+      {/* Account Section */}
+      <div className="p-3 border-t border-[var(--color-border)] bg-[var(--color-surface)] dark:bg-[var(--color-sidebar-bg)]">
+        <p className="text-[11px] font-medium text-[var(--color-text-muted)] mb-2 px-1">
           Account
         </p>
-        <div className="flex items-center gap-2.5">
-          <div className="w-8 h-8 rounded-full bg-gradient-to-tr from-[#9e2040] to-rose-700 text-white font-bold text-xs flex items-center justify-center shrink-0 shadow-xs border border-rose-400/40">
+        <div className="flex items-center gap-2.5 p-1 rounded-lg">
+          <div className="w-8 h-8 rounded-lg bg-[var(--color-surface-2)] text-[var(--color-text)] border border-[var(--color-border)] font-mono text-xs font-semibold flex items-center justify-center shrink-0">
             {initials}
           </div>
           <div className="min-w-0 leading-tight">
-            <p className="text-xs font-semibold text-slate-900 dark:text-slate-100 truncate" title={displayName}>
+            <p className="text-xs font-medium text-[var(--color-text)] truncate" title={displayName}>
               {displayName}
             </p>
-            <p className="text-[10px] text-slate-500 dark:text-slate-400 truncate">
+            <p className="text-[11px] text-[var(--color-text-muted)] truncate mt-0.5">
               {displayRole}
             </p>
           </div>

@@ -27,12 +27,10 @@ import {
 import { db } from "@/db/storage";
 import { calculateMetrics } from "@/services/metrics";
 import { exportToExcel } from "@/services/exporter";
-import { useAuthStore } from "@/store/auth";
 import { format } from "date-fns";
 
 export default function DashboardPage() {
   const navigate = useNavigate();
-  const user = useAuthStore((s) => s.user);
   const [dbState, setDbState] = useState(db.getState());
   const [selectedDeptId, setSelectedDeptId] = useState<string>("ALL");
   const [rosterSearch, setRosterSearch] = useState("");
@@ -190,95 +188,89 @@ export default function DashboardPage() {
   return (
     <div className="space-y-4">
       {/* ─── WELCOME BANNER WITH USER DISPLAY NAME ─────────────────────── */}
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 p-4 rounded-2xl border border-slate-200/90 dark:border-slate-800 bg-white dark:bg-[#161922] shadow-[0_1px_3px_rgba(0,0,0,0.06),0_1px_2px_rgba(0,0,0,0.04)]">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 p-5 rounded-xl border border-[var(--color-border)] bg-[var(--color-surface)]">
         <div>
-          <h1 className="text-xl font-bold tracking-tight text-slate-900 dark:text-slate-100 flex items-center gap-2">
-            <span>Welcome back, {user?.name || "Placement Officer"}</span>
-            <span className="text-[11px] font-semibold px-2.5 py-0.5 rounded-full bg-[var(--color-brand)]/10 text-[var(--color-brand)] border border-[var(--color-brand)]/20">
-              {user?.role || "Staff"}
+          <div className="flex items-center gap-2.5">
+            <h1 className="text-xl font-semibold tracking-tight text-[var(--color-text)]">
+              Placement Overview
+            </h1>
+            <span className="font-mono text-[11px] px-2 py-0.5 rounded border border-[var(--color-border)] bg-[var(--color-surface-2)] text-[var(--color-text-muted)]">
+              AY 2024–2025
             </span>
-          </h1>
-          <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
-            Placement management &amp; analytics terminal &bull; Academic Year 2024-2025
+          </div>
+          <p className="text-xs text-[var(--color-text-secondary)] mt-1">
+            RNS Rural Polytechnic Murdeshwar · Diploma (ME, AE, EE, CSE)
           </p>
         </div>
-        <div className="flex items-center gap-2 text-xs font-semibold text-slate-500 dark:text-slate-400 bg-slate-50 dark:bg-slate-900 px-3 py-1.5 rounded-xl border border-slate-200 dark:border-slate-800 self-start sm:self-auto">
+        <div className="flex items-center gap-2 text-xs font-mono text-[var(--color-text-muted)] bg-[var(--color-surface-2)] px-3 py-1.5 rounded-lg border border-[var(--color-border)] self-start sm:self-auto">
           <Calendar size={14} className="text-[var(--color-brand)]" />
-          <span>{format(new Date(), "EEEE, d MMMM yyyy")}</span>
+          <span>{format(new Date(), "EEEE, d MMM yyyy")}</span>
         </div>
       </div>
 
       {/* ─── TOP KPI CARDS ROW (Matching Uizard Layout) ────────────────── */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3.5">
-        {/* Card 1: Total Drives Active */}
-        <div className="p-4 rounded-xl border border-slate-200/90 dark:border-slate-800 bg-white dark:bg-[#161922] shadow-[0_1px_3px_rgba(0,0,0,0.06),0_1px_2px_rgba(0,0,0,0.04)] ring-1 ring-slate-900/[0.04] dark:ring-0 flex items-center justify-between">
-          <div>
-            <span className="text-[11px] font-semibold text-slate-500 dark:text-slate-400 block mb-0.5">
-              Total Drives Active
-            </span>
-            <div className="text-2xl font-bold tracking-tight text-slate-900 dark:text-slate-100">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        {/* Card 1: Active Drives */}
+        <div className="p-5 rounded-xl border border-[var(--color-border)] bg-[var(--color-surface)] flex flex-col justify-between">
+          <div className="flex items-center justify-between text-[var(--color-text-muted)]">
+            <span className="text-xs font-medium">Active drives</span>
+            <Briefcase size={16} strokeWidth={1.5} />
+          </div>
+          <div className="mt-3">
+            <div className="text-3xl font-semibold font-mono tabular-nums text-[var(--color-text)]">
               {metrics.active_drives || 18}
             </div>
-            <p className="text-[10px] text-slate-400 dark:text-slate-500 mt-1">
-              including on-campus &amp; virtual
+            <p className="text-[11px] text-[var(--color-text-muted)] mt-1">
+              On-campus &amp; virtual
             </p>
-          </div>
-          <div className="w-10 h-10 rounded-full bg-indigo-500/10 dark:bg-indigo-500/20 text-indigo-600 dark:text-indigo-400 flex items-center justify-center shrink-0">
-            <Briefcase size={18} />
           </div>
         </div>
 
-        {/* Card 2: Placement % */}
-        <div className="p-4 rounded-xl border border-slate-200/90 dark:border-slate-800 bg-white dark:bg-[#161922] shadow-[0_1px_3px_rgba(0,0,0,0.06),0_1px_2px_rgba(0,0,0,0.04)] ring-1 ring-slate-900/[0.04] dark:ring-0 flex items-center justify-between">
-          <div>
-            <span className="text-[11px] font-semibold text-slate-500 dark:text-slate-400 block mb-0.5">
-              Placement %
-            </span>
-            <div className="text-2xl font-bold tracking-tight text-slate-900 dark:text-slate-100">
+        {/* Card 2: Placement Rate */}
+        <div className="p-5 rounded-xl border border-[var(--color-border)] bg-[var(--color-surface)] flex flex-col justify-between">
+          <div className="flex items-center justify-between text-[var(--color-text-muted)]">
+            <span className="text-xs font-medium">Placement rate</span>
+            <TrendingUp size={16} strokeWidth={1.5} />
+          </div>
+          <div className="mt-3">
+            <div className="text-3xl font-semibold font-mono tabular-nums text-[var(--color-text)]">
               {metrics.total_active_students > 0 ? `${metrics.placement_percentage}%` : "72.4%"}
             </div>
-            <p className="text-[10px] text-slate-400 dark:text-slate-500 mt-1">
-              updated: Oct 2026
+            <p className="text-[11px] text-[var(--color-selected-text)] mt-1">
+              +4.2% vs previous cycle
             </p>
-          </div>
-          <div className="w-10 h-10 rounded-full bg-emerald-500/10 dark:bg-emerald-500/20 text-emerald-600 dark:text-emerald-400 flex items-center justify-center shrink-0">
-            <TrendingUp size={18} />
           </div>
         </div>
 
         {/* Card 3: Average Package */}
-        <div className="p-4 rounded-xl border border-slate-200/90 dark:border-slate-800 bg-white dark:bg-[#161922] shadow-[0_1px_3px_rgba(0,0,0,0.06),0_1px_2px_rgba(0,0,0,0.04)] ring-1 ring-slate-900/[0.04] dark:ring-0 flex items-center justify-between">
-          <div>
-            <span className="text-[11px] font-semibold text-slate-500 dark:text-slate-400 block mb-0.5">
-              Average Package
-            </span>
-            <div className="text-2xl font-bold tracking-tight text-slate-900 dark:text-slate-100">
-              INR {metrics.salaries.average_lpa > 0 ? metrics.salaries.average_lpa : "9.6"} LPA
+        <div className="p-5 rounded-xl border border-[var(--color-border)] bg-[var(--color-surface)] flex flex-col justify-between">
+          <div className="flex items-center justify-between text-[var(--color-text-muted)]">
+            <span className="text-xs font-medium">Average package</span>
+            <DollarSign size={16} strokeWidth={1.5} />
+          </div>
+          <div className="mt-3">
+            <div className="text-3xl font-semibold font-mono tabular-nums text-[var(--color-text)]">
+              INR {metrics.salaries.average_lpa > 0 ? metrics.salaries.average_lpa : "9.6"} <span className="text-sm font-normal text-[var(--color-text-muted)]">LPA</span>
             </div>
-            <p className="text-[10px] text-slate-400 dark:text-slate-500 mt-1">
+            <p className="text-[11px] text-[var(--color-text-muted)] mt-1 font-mono">
               Median INR {metrics.salaries.median_lpa > 0 ? metrics.salaries.median_lpa : "7.8"} LPA
             </p>
-          </div>
-          <div className="w-10 h-10 rounded-full bg-amber-500/10 dark:bg-amber-500/20 text-amber-600 dark:text-amber-400 flex items-center justify-center shrink-0">
-            <DollarSign size={18} />
           </div>
         </div>
 
         {/* Card 4: Upcoming Interviews */}
-        <div className="p-4 rounded-xl border border-slate-200/90 dark:border-slate-800 bg-white dark:bg-[#161922] shadow-[0_1px_3px_rgba(0,0,0,0.06),0_1px_2px_rgba(0,0,0,0.04)] ring-1 ring-slate-900/[0.04] dark:ring-0 flex items-center justify-between">
-          <div>
-            <span className="text-[11px] font-semibold text-slate-500 dark:text-slate-400 block mb-0.5">
-              Upcoming Interviews
-            </span>
-            <div className="text-2xl font-bold tracking-tight text-slate-900 dark:text-slate-100">
+        <div className="p-5 rounded-xl border border-[var(--color-border)] bg-[var(--color-surface)] flex flex-col justify-between">
+          <div className="flex items-center justify-between text-[var(--color-text-muted)]">
+            <span className="text-xs font-medium">Upcoming interviews</span>
+            <Calendar size={16} strokeWidth={1.5} />
+          </div>
+          <div className="mt-3">
+            <div className="text-3xl font-semibold font-mono tabular-nums text-[var(--color-text)]">
               {upcomingInterviews.length || 6}
             </div>
-            <p className="text-[10px] text-slate-400 dark:text-slate-500 mt-1 truncate max-w-[130px]">
+            <p className="text-[11px] text-[var(--color-text-muted)] mt-1 truncate">
               Next: {upcomingInterviews[0]?.company || "Tata Tech"}
             </p>
-          </div>
-          <div className="w-10 h-10 rounded-full bg-purple-500/10 dark:bg-purple-500/20 text-purple-600 dark:text-purple-400 flex items-center justify-center shrink-0">
-            <Calendar size={18} />
           </div>
         </div>
       </div>
@@ -288,7 +280,7 @@ export default function DashboardPage() {
         {/* LEFT COLUMN (5 cols): Calendar, Alerts, Quick Actions */}
         <div className="lg:col-span-5 space-y-4">
           {/* Card: Interview Calendar */}
-          <div className="p-4 rounded-xl border border-slate-200/90 dark:border-slate-800 bg-white dark:bg-[#161922] shadow-[0_1px_3px_rgba(0,0,0,0.06),0_1px_2px_rgba(0,0,0,0.04)] ring-1 ring-slate-900/[0.04] dark:ring-0">
+          <div className="p-4 rounded-xl border border-[var(--color-border)] bg-[var(--color-surface)]">
             <div className="flex items-center justify-between mb-3">
               <div>
                 <h3 className="text-xs font-bold text-slate-900 dark:text-slate-100">
@@ -309,7 +301,7 @@ export default function DashboardPage() {
                 <div
                   key={iv.id}
                   onClick={() => navigate("/interviews")}
-                  className="p-2.5 rounded-lg border border-slate-200/80 dark:border-slate-800/80 bg-slate-50/70 dark:bg-slate-900/40 hover:border-slate-300 dark:hover:border-slate-700 cursor-pointer transition-colors flex items-center justify-between"
+                  className="p-3 rounded-lg border border-[var(--color-border)] bg-[var(--color-surface-2)] hover:border-[var(--color-text-muted)] transition-colors duration-150 ease-unslop cursor-pointer transition-colors flex items-center justify-between"
                 >
                   <div className="min-w-0">
                     <p className="text-xs font-semibold text-slate-800 dark:text-slate-200 truncate">
@@ -329,7 +321,7 @@ export default function DashboardPage() {
           </div>
 
           {/* Card: Alerts & Reminders */}
-          <div className="p-4 rounded-xl border border-slate-200/90 dark:border-slate-800 bg-white dark:bg-[#161922] shadow-[0_1px_3px_rgba(0,0,0,0.06),0_1px_2px_rgba(0,0,0,0.04)] ring-1 ring-slate-900/[0.04] dark:ring-0">
+          <div className="p-4 rounded-xl border border-[var(--color-border)] bg-[var(--color-surface)]">
             <div className="flex items-center justify-between mb-3">
               <div>
                 <h3 className="text-xs font-bold text-slate-900 dark:text-slate-100">
@@ -373,7 +365,7 @@ export default function DashboardPage() {
           </div>
 
           {/* Card: Quick Actions */}
-          <div className="p-4 rounded-xl border border-slate-200/90 dark:border-slate-800 bg-white dark:bg-[#161922] shadow-[0_1px_3px_rgba(0,0,0,0.06),0_1px_2px_rgba(0,0,0,0.04)] ring-1 ring-slate-900/[0.04] dark:ring-0 space-y-2.5">
+          <div className="p-4 rounded-xl border border-[var(--color-border)] bg-[var(--color-surface)] space-y-2.5">
             <h3 className="text-xs font-bold text-slate-900 dark:text-slate-100 mb-2">
               Quick Actions
             </h3>
@@ -435,7 +427,7 @@ export default function DashboardPage() {
         {/* RIGHT COLUMN (7 cols): Searchable Roster + Recent Activity & Trends */}
         <div className="lg:col-span-7 space-y-4">
           {/* Card: Roster - Searchable (Matching Uizard Screenshot) */}
-          <div className="p-4 rounded-xl border border-slate-200/90 dark:border-slate-800 bg-white dark:bg-[#161922] shadow-[0_1px_3px_rgba(0,0,0,0.06),0_1px_2px_rgba(0,0,0,0.04)] ring-1 ring-slate-900/[0.04] dark:ring-0">
+          <div className="p-4 rounded-xl border border-[var(--color-border)] bg-[var(--color-surface)]">
             <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 mb-3">
               <div>
                 <h3 className="text-xs font-bold text-slate-900 dark:text-slate-100">
@@ -476,7 +468,7 @@ export default function DashboardPage() {
                 <div
                   key={st.id}
                   onClick={() => navigate(`/students?search=${encodeURIComponent(st.reg)}`)}
-                  className="p-3 rounded-lg border border-slate-200/80 dark:border-slate-800/80 bg-slate-50/70 dark:bg-slate-900/40 hover:border-slate-300 dark:hover:border-slate-700 cursor-pointer transition-colors flex items-center justify-between gap-3"
+                  className="p-3 rounded-lg border border-[var(--color-border)] bg-[var(--color-surface-2)] hover:border-[var(--color-text-muted)] transition-colors duration-150 ease-unslop cursor-pointer transition-colors flex items-center justify-between gap-3"
                 >
                   <div className="flex items-center gap-3 min-w-0">
                     <div className="w-8 h-8 rounded-full bg-[var(--color-brand-light)] text-[var(--color-brand)] font-bold text-xs flex items-center justify-center shrink-0">
@@ -487,7 +479,7 @@ export default function DashboardPage() {
                         {st.name}
                       </p>
                       <p className="text-[10px] text-slate-400 truncate">
-                        Roll: {st.reg} — Cumulative GPA: {st.cgpa} — Eligible for {st.eligibleFor}
+                        Roll: {st.reg} · CGPA {st.cgpa} · Eligible for {st.eligibleFor}
                       </p>
                     </div>
                   </div>
@@ -508,7 +500,7 @@ export default function DashboardPage() {
           {/* Bottom Split Row: Recent Activity & KPI Trends */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {/* Sub-Card 1: Recent Activity */}
-            <div className="p-4 rounded-xl border border-slate-200/90 dark:border-slate-800 bg-white dark:bg-[#161922] shadow-[0_1px_3px_rgba(0,0,0,0.06),0_1px_2px_rgba(0,0,0,0.04)] ring-1 ring-slate-900/[0.04] dark:ring-0">
+            <div className="p-4 rounded-xl border border-[var(--color-border)] bg-[var(--color-surface)]">
               <h4 className="text-xs font-bold text-slate-900 dark:text-slate-100 mb-0.5">
                 Recent Activity
               </h4>
@@ -548,7 +540,7 @@ export default function DashboardPage() {
             </div>
 
             {/* Sub-Card 2: KPI Trends */}
-            <div className="p-4 rounded-xl border border-slate-200/90 dark:border-slate-800 bg-white dark:bg-[#161922] shadow-[0_1px_3px_rgba(0,0,0,0.06),0_1px_2px_rgba(0,0,0,0.04)] ring-1 ring-slate-900/[0.04] dark:ring-0">
+            <div className="p-4 rounded-xl border border-[var(--color-border)] bg-[var(--color-surface)]">
               <div className="flex items-center justify-between mb-1">
                 <h4 className="text-xs font-bold text-slate-900 dark:text-slate-100">
                   KPI Trends
@@ -590,7 +582,7 @@ export default function DashboardPage() {
                       isAnimationActive={false}
                       dataKey="drives"
                       name="Drives"
-                      fill="#10b981"
+                      fill="var(--color-border)"
                       radius={[3, 3, 0, 0]}
                     />
                     <Line
@@ -598,7 +590,7 @@ export default function DashboardPage() {
                       type="monotone"
                       dataKey="rate"
                       name="Placement %"
-                      stroke="#9e2040"
+                      stroke="var(--color-brand)"
                       strokeWidth={2}
                       dot={false}
                     />

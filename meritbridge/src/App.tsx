@@ -7,6 +7,7 @@ import AppShell from "@/components/layout/AppShell";
 const LoginPage = lazy(() => import("@/pages/auth/LoginPage"));
 const DashboardPage = lazy(() => import("@/pages/dashboard/DashboardPage"));
 const StudentsPage = lazy(() => import("@/pages/students/StudentsPage"));
+const InternshipsPage = lazy(() => import("@/pages/internships/InternshipsPage"));
 const CompaniesPage = lazy(() => import("@/pages/companies/CompaniesPage"));
 const DrivesPage = lazy(() => import("@/pages/drives/DrivesPage"));
 const InterviewsPage = lazy(() => import("@/pages/interviews/InterviewsPage"));
@@ -52,6 +53,7 @@ export default function App() {
         >
           <Route path="/dashboard" element={<DashboardPage />} />
           <Route path="/students/*" element={<StudentsPage />} />
+          <Route path="/internships" element={<InternshipsPage />} />
           <Route path="/companies/*" element={<CompaniesPage />} />
           <Route path="/drives/*" element={<DrivesPage />} />
           <Route path="/interviews" element={<InterviewsPage />} />

@@ -67,7 +67,7 @@ export default function AppShell() {
   };
 
   return (
-    <div className="relative flex h-full overflow-hidden bg-[#f4f6f9] dark:bg-[#0c0e14]">
+    <div className="relative flex h-full overflow-hidden bg-[var(--color-bg)]">
       <Sidebar />
       <div className="flex flex-1 flex-col overflow-hidden">
         <Header />
@@ -88,7 +88,7 @@ export default function AppShell() {
           aria-labelledby="lockscreen-title"
           className="fixed inset-0 z-[100] flex flex-col items-center justify-center bg-slate-950/80 backdrop-blur-md px-4 animate-in fade-in duration-150"
         >
-          <div className="w-full max-w-sm rounded-3xl border border-slate-800 bg-[#12151d] p-8 shadow-2xl text-center">
+          <div className="w-full max-w-sm rounded-xl border border-[var(--color-border)] bg-[var(--color-surface)] p-6 shadow-xl text-center">
             {/* Logo / Lock icon lockup */}
             <div className="mx-auto mb-6 flex flex-col items-center">
               <div className="relative mb-3">

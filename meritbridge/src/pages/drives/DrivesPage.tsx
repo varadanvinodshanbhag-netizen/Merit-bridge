@@ -264,6 +264,11 @@ function DriveDetailModal({
   const [overrideStatus, setOverrideStatus] = useState<EligibilityVerdict>("Eligible");
   const [overrideReason, setOverrideReason] = useState("");
 
+  const [selectedCandidateIds, setSelectedCandidateIds] = useState<number[]>([]);
+  const [rosterSearch, setRosterSearch] = useState("");
+  const [rosterVerdictFilter, setRosterVerdictFilter] = useState<string>("ALL");
+  const [rosterDeptFilter, setRosterDeptFilter] = useState<number | "">("");
+
   const [showIssueOfferModal, setShowIssueOfferModal] = useState(false);
   const [offerAppId, setOfferAppId] = useState<number | null>(null);
   const [offerDesignation, setOfferDesignation] = useState("");
@@ -365,6 +370,110 @@ function DriveDetailModal({
     });
 
     alert(`Successfully registered ${addedCount} eligible students for ${drive.title}!`);
+  };
+
+  // Bulk Register specific selected candidates (Allows manual override / special skills inclusion)
+  const handleBulkRegisterSelected = () => {
+    if (selectedCandidateIds.length === 0) return;
+    const now = new Date().toISOString();
+    let addedCount = 0;
+
+    db.setState((draft) => {
+      let nextAppId = draft.applications.length > 0
+        ? Math.max(...draft.applications.map((a) => a.id)) + 1
+        : 1;
+
+      for (const sId of selectedCandidateIds) {
+        const alreadyApplied = draft.applications.some(
+          (a) => a.drive_id === drive.id && a.student_id === sId
+        );
+        if (!alreadyApplied) {
+          draft.applications.push({
+            id: nextAppId++,
+            drive_id: drive.id,
+            student_id: sId,
+            applied_date: now.split("T")[0],
+            final_outcome: "Pending",
+            stages: drive.stages.map((st, i) => ({
+              id: Date.now() + nextAppId + i,
+              application_id: nextAppId,
+              drive_stage_id: st.id,
+              outcome: "Pending",
+              updated_at: now,
+              updated_by: user?.id || 1,
+            })),
+            created_at: now,
+            updated_at: now,
+          });
+          addedCount++;
+        }
+      }
+    });
+
+    logAudit({
+      userId: user?.id || 1,
+      userName: user?.name || "Placement Staff",
+      action: "BULK_APPLY_SELECTED",
+      entityType: "Drive",
+      entityId: drive.title,
+      summary: `Manually enrolled ${addedCount} selected candidate(s) to drive ${drive.title}`,
+    });
+
+    setSelectedCandidateIds([]);
+    alert(`Enrolled ${addedCount} selected candidate(s) into ${drive.title}!`);
+  };
+
+  // Unenroll a student from drive
+  const handleUnenrollStudent = (studentId: number) => {
+    const app = dbState.applications.find((a) => a.drive_id === drive.id && a.student_id === studentId);
+    if (!app) return;
+    const hasOffer = dbState.offers.some((o) => o.application_id === app.id);
+    if (hasOffer) {
+      alert("Cannot unenroll candidate who already holds a recorded placement offer.");
+      return;
+    }
+
+    db.setState((draft) => {
+      draft.applications = draft.applications.filter((a) => a.id !== app.id);
+    });
+
+    logAudit({
+      userId: user?.id || 1,
+      userName: user?.name || "Placement Staff",
+      action: "UNENROLL_STUDENT_DRIVE",
+      entityType: "Drive",
+      entityId: drive.id,
+      summary: `Removed student ID ${studentId} from drive ${drive.title}`,
+    });
+  };
+
+  // Filter roster by search, department, and verdict
+  const filteredCandidates = useMemo(() => {
+    return eligibilityEvaluations.filter(({ student, evaluation }) => {
+      if (rosterVerdictFilter !== "ALL" && evaluation.effectiveStatus !== rosterVerdictFilter) return false;
+      if (rosterDeptFilter && student.department_id !== rosterDeptFilter) return false;
+      if (rosterSearch.trim()) {
+        const q = rosterSearch.toLowerCase().trim();
+        const matchesName = student.full_name.toLowerCase().includes(q);
+        const matchesReg = student.registration_number.toLowerCase().includes(q);
+        if (!matchesName && !matchesReg) return false;
+      }
+      return true;
+    });
+  }, [eligibilityEvaluations, rosterVerdictFilter, rosterDeptFilter, rosterSearch]);
+
+  const allVisibleSelected =
+    filteredCandidates.length > 0 &&
+    filteredCandidates.every((c) => selectedCandidateIds.includes(c.student.id));
+
+  const toggleSelectAllVisible = () => {
+    if (allVisibleSelected) {
+      const visibleIds = new Set(filteredCandidates.map((c) => c.student.id));
+      setSelectedCandidateIds((prev) => prev.filter((id) => !visibleIds.has(id)));
+    } else {
+      const visibleIds = filteredCandidates.map((c) => c.student.id);
+      setSelectedCandidateIds((prev) => Array.from(new Set([...prev, ...visibleIds])));
+    }
   };
 
   // Register an individual student
@@ -761,23 +870,72 @@ function DriveDetailModal({
           {/* ─── TAB 1: ELIGIBILITY EVALUATION ───────────────────────────────── */}
           {activeTab === "ELIGIBLE" && (
             <div className="space-y-4">
-              <div className="flex items-center justify-between">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                 <div>
                   <h3 className="text-sm font-bold text-slate-900 dark:text-slate-100">
                     Candidate Eligibility Roster
                   </h3>
                   <p className="text-[11px] text-slate-500">
-                    Computed based on drive criteria rules. Ineligible & review rules display specific explanations.
+                    {eligibilityEvaluations.filter((e) => e.evaluation.effectiveStatus === "Eligible").length} Eligible · {applications.length} Enrolled in Drive
                   </p>
                 </div>
 
-                <button
-                  onClick={handleBulkApplyEligible}
-                  className="flex items-center gap-2 rounded-xl bg-[var(--color-brand)] px-4 py-2 text-xs font-semibold text-white shadow-sm hover:bg-[var(--color-brand-hover)]"
+                <div className="flex items-center gap-2">
+                  {selectedCandidateIds.length > 0 && (
+                    <button
+                      onClick={handleBulkRegisterSelected}
+                      className="flex items-center gap-1.5 rounded-xl bg-indigo-600 hover:bg-indigo-700 px-3.5 py-2 text-xs font-semibold text-white shadow-sm transition-colors"
+                    >
+                      <Users size={14} />
+                      Enroll Selected ({selectedCandidateIds.length})
+                    </button>
+                  )}
+                  <button
+                    onClick={handleBulkApplyEligible}
+                    className="flex items-center gap-1.5 rounded-xl bg-[var(--color-brand)] px-3.5 py-2 text-xs font-semibold text-white shadow-sm hover:bg-[var(--color-brand-hover)] transition-colors"
+                  >
+                    <CheckCircle2 size={14} />
+                    Auto-Enroll All Eligible ({eligibilityEvaluations.filter((e) => e.evaluation.effectiveStatus === "Eligible" && !applications.some((a) => a.student_id === e.student.id)).length})
+                  </button>
+                </div>
+              </div>
+
+              {/* Roster Filters Toolbar */}
+              <div className="flex flex-col sm:flex-row items-center gap-2.5 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-900/30 p-2.5 text-xs">
+                <div className="relative flex-1 w-full">
+                  <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
+                  <input
+                    type="search"
+                    placeholder="Search candidate by name or registration number..."
+                    value={rosterSearch}
+                    onChange={(e) => setRosterSearch(e.target.value)}
+                    className="w-full rounded-lg border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 pl-8 pr-3 py-1.5 text-xs text-slate-900 dark:text-slate-100"
+                  />
+                </div>
+
+                <select
+                  value={rosterDeptFilter}
+                  onChange={(e) => setRosterDeptFilter(e.target.value ? Number(e.target.value) : "")}
+                  className="rounded-lg border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 px-2.5 py-1.5 font-medium text-slate-700 dark:text-slate-300 w-full sm:w-auto"
                 >
-                  <Plus size={14} />
-                  Bulk Register Eligible Candidates
-                </button>
+                  <option value="">All Departments</option>
+                  {dbState.departments.map((d) => (
+                    <option key={d.id} value={d.id}>
+                      {d.code} · {d.name}
+                    </option>
+                  ))}
+                </select>
+
+                <select
+                  value={rosterVerdictFilter}
+                  onChange={(e) => setRosterVerdictFilter(e.target.value)}
+                  className="rounded-lg border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 px-2.5 py-1.5 font-medium text-slate-700 dark:text-slate-300 w-full sm:w-auto"
+                >
+                  <option value="ALL">All Verdicts</option>
+                  <option value="Eligible">Eligible Only</option>
+                  <option value="Ineligible">Ineligible Only</option>
+                  <option value="Needs Review">Needs Review</option>
+                </select>
               </div>
 
               {/* Roster table */}
@@ -785,72 +943,140 @@ function DriveDetailModal({
                 <table className="w-full text-xs">
                   <thead className="bg-slate-50 dark:bg-slate-900/60 border-b border-slate-100 dark:border-slate-800 text-slate-400">
                     <tr>
-                      <th className="px-4 py-3 text-left font-semibold">Reg Number</th>
-                      <th className="px-4 py-3 text-left font-semibold">Student Name</th>
-                      <th className="px-4 py-3 text-left font-semibold">CGPA</th>
-                      <th className="px-4 py-3 text-left font-semibold">Verdict</th>
-                      <th className="px-4 py-3 text-left font-semibold">Rule Explanations</th>
-                      <th className="px-4 py-3 text-right font-semibold">Action</th>
+                      <th className="px-3 py-3 text-center w-10">
+                        <input
+                          type="checkbox"
+                          checked={allVisibleSelected}
+                          onChange={toggleSelectAllVisible}
+                          className="rounded border-slate-300 text-[var(--color-brand)] focus:ring-[var(--color-brand)]"
+                        />
+                      </th>
+                      <th className="px-3 py-3 text-left font-semibold">Reg Number</th>
+                      <th className="px-3 py-3 text-left font-semibold">Student Name</th>
+                      <th className="px-3 py-3 text-left font-semibold">Dept</th>
+                      <th className="px-3 py-3 text-left font-semibold">CGPA</th>
+                      <th className="px-3 py-3 text-left font-semibold">Internship</th>
+                      <th className="px-3 py-3 text-left font-semibold">Verdict</th>
+                      <th className="px-3 py-3 text-left font-semibold">Rule Explanations</th>
+                      <th className="px-3 py-3 text-right font-semibold">Action</th>
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-slate-100 dark:divide-slate-800">
-                    {eligibilityEvaluations.map(({ student, evaluation }) => (
-                      <tr key={student.id} className="hover:bg-slate-50/60 dark:hover:bg-slate-800/40">
-                        <td className="px-4 py-3 font-mono font-bold text-slate-900 dark:text-slate-100">
-                          {student.registration_number}
-                        </td>
-                        <td className="px-4 py-3 font-semibold text-slate-800 dark:text-slate-200">
-                          {student.full_name}
-                        </td>
-                        <td className="px-4 py-3 font-mono font-bold">
-                          {student.cgpa !== null && student.cgpa !== undefined ? student.cgpa.toFixed(2) : "—"}
-                        </td>
-                        <td className="px-4 py-3">
-                          <span
-                            className={clsx(
-                              "rounded-full px-2.5 py-0.5 text-[10px] font-bold inline-block",
-                              evaluation.effectiveStatus === "Eligible" &&
-                                "bg-emerald-50 text-emerald-700 dark:bg-emerald-950 dark:text-emerald-400 border border-emerald-200",
-                              evaluation.effectiveStatus === "Needs Review" &&
-                                "bg-amber-50 text-amber-700 dark:bg-amber-950 dark:text-amber-400 border border-amber-200",
-                              evaluation.effectiveStatus === "Ineligible" &&
-                                "bg-rose-50 text-rose-700 dark:bg-rose-950 dark:text-rose-400 border border-rose-200"
-                            )}
-                          >
-                            {evaluation.effectiveStatus}
-                            {evaluation.override && " (Override)"}
-                          </span>
-                        </td>
-                        <td className="px-4 py-3 text-slate-500 max-w-xs truncate">
-                          {evaluation.explanation.map((e) => e.detail).join("; ")}
-                        </td>
-                        <td className="px-4 py-3 text-right">
-                          <div className="flex items-center justify-end gap-2.5">
-                            {applications.some((a) => a.student_id === student.id) ? (
-                              <span className="inline-flex items-center gap-1 text-[10px] font-semibold text-emerald-600 bg-emerald-50 dark:bg-emerald-950/40 px-2 py-0.5 rounded-full border border-emerald-200/50">
-                                <CheckCircle2 size={11} /> Enrolled
-                              </span>
-                            ) : (
-                              <button
-                                onClick={() => handleRegisterStudent(student.id)}
-                                className="text-xs font-semibold text-emerald-600 hover:underline"
-                              >
-                                Enroll
-                              </button>
-                            )}
-                            <button
-                              onClick={() => {
-                                setOverrideStudentId(student.id);
-                                setOverrideStatus(evaluation.effectiveStatus === "Eligible" ? "Ineligible" : "Eligible");
-                              }}
-                              className="text-xs font-semibold text-[var(--color-brand)] hover:underline"
-                            >
-                              Override
-                            </button>
-                          </div>
+                    {filteredCandidates.length === 0 ? (
+                      <tr>
+                        <td colSpan={9} className="px-4 py-8 text-center text-slate-400">
+                          No candidates found matching the selected filters.
                         </td>
                       </tr>
-                    ))}
+                    ) : (
+                      filteredCandidates.map(({ student, evaluation }) => {
+                        const isSelected = selectedCandidateIds.includes(student.id);
+                        const isEnrolled = applications.some((a) => a.student_id === student.id);
+                        const dept = dbState.departments.find((d) => d.id === student.department_id);
+
+                        return (
+                          <tr
+                            key={student.id}
+                            className={clsx(
+                              "hover:bg-slate-50/60 dark:hover:bg-slate-800/40 transition-colors",
+                              isSelected && "bg-indigo-50/30 dark:bg-indigo-950/20"
+                            )}
+                          >
+                            <td className="px-3 py-3 text-center">
+                              <input
+                                type="checkbox"
+                                checked={isSelected}
+                                onChange={() => {
+                                  setSelectedCandidateIds((prev) =>
+                                    isSelected ? prev.filter((id) => id !== student.id) : [...prev, student.id]
+                                  );
+                                }}
+                                className="rounded border-slate-300 text-[var(--color-brand)] focus:ring-[var(--color-brand)]"
+                              />
+                            </td>
+                            <td className="px-3 py-3 font-mono font-bold text-slate-900 dark:text-slate-100">
+                              {student.registration_number}
+                            </td>
+                            <td className="px-3 py-3 font-semibold text-slate-800 dark:text-slate-200">
+                              {student.full_name}
+                            </td>
+                            <td className="px-3 py-3">
+                              <span className="rounded-md bg-slate-100 dark:bg-slate-800 px-1.5 py-0.5 text-[10px] font-bold text-slate-700 dark:text-slate-300">
+                                {dept?.code || "—"}
+                              </span>
+                            </td>
+                            <td className="px-3 py-3 font-mono font-bold">
+                              {student.cgpa !== null && student.cgpa !== undefined ? student.cgpa.toFixed(2) : "—"}
+                            </td>
+                            <td className="px-3 py-3">
+                              {student.internship_status === "Active" ? (
+                                <span className="inline-flex items-center gap-1 text-[10px] font-semibold text-emerald-700 bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200/50 px-2 py-0.5 rounded-md">
+                                  Active: {student.internship_company || "Company"}
+                                </span>
+                              ) : student.internship_status === "Completed" ? (
+                                <span className="inline-flex items-center gap-1 text-[10px] font-semibold text-blue-700 bg-blue-50 dark:bg-blue-950/40 border border-blue-200/50 px-2 py-0.5 rounded-md">
+                                  Done: {student.internship_company || "Company"}
+                                </span>
+                              ) : (
+                                <span className="text-slate-400">—</span>
+                              )}
+                            </td>
+                            <td className="px-3 py-3">
+                              <span
+                                className={clsx(
+                                  "rounded-full px-2.5 py-0.5 text-[10px] font-bold inline-block",
+                                  evaluation.effectiveStatus === "Eligible" &&
+                                    "bg-emerald-50 text-emerald-700 dark:bg-emerald-950 dark:text-emerald-400 border border-emerald-200",
+                                  evaluation.effectiveStatus === "Needs Review" &&
+                                    "bg-amber-50 text-amber-700 dark:bg-amber-950 dark:text-amber-400 border border-amber-200",
+                                  evaluation.effectiveStatus === "Ineligible" &&
+                                    "bg-rose-50 text-rose-700 dark:bg-rose-950 dark:text-rose-400 border border-rose-200"
+                                )}
+                              >
+                                {evaluation.effectiveStatus}
+                                {evaluation.override && " (Override)"}
+                              </span>
+                            </td>
+                            <td className="px-3 py-3 text-slate-500 max-w-xs truncate" title={evaluation.explanation.map((e) => e.detail).join("; ")}>
+                              {evaluation.explanation.map((e) => e.detail).join("; ")}
+                            </td>
+                            <td className="px-3 py-3 text-right">
+                              <div className="flex items-center justify-end gap-2">
+                                {isEnrolled ? (
+                                  <div className="flex items-center gap-1.5">
+                                    <span className="inline-flex items-center gap-1 text-[10px] font-semibold text-emerald-600 bg-emerald-50 dark:bg-emerald-950/40 px-2 py-0.5 rounded-full border border-emerald-200/50">
+                                      <CheckCircle2 size={11} /> Enrolled
+                                    </span>
+                                    <button
+                                      onClick={() => handleUnenrollStudent(student.id)}
+                                      className="text-[11px] text-rose-500 hover:text-rose-700 font-medium hover:underline"
+                                    >
+                                      Remove
+                                    </button>
+                                  </div>
+                                ) : (
+                                  <button
+                                    onClick={() => handleRegisterStudent(student.id)}
+                                    className="px-2.5 py-1 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white font-semibold text-[11px] shadow-xs transition-colors"
+                                  >
+                                    Enroll
+                                  </button>
+                                )}
+                                <button
+                                  onClick={() => {
+                                    setOverrideStudentId(student.id);
+                                    setOverrideStatus(evaluation.effectiveStatus === "Eligible" ? "Ineligible" : "Eligible");
+                                  }}
+                                  className="text-[11px] font-semibold text-[var(--color-brand)] hover:underline ml-1"
+                                >
+                                  Override
+                                </button>
+                              </div>
+                            </td>
+                          </tr>
+                        );
+                      })
+                    )}
                   </tbody>
                 </table>
               </div>
@@ -1190,7 +1416,13 @@ function DriveModal({
   const initialMaxBacklogs =
     initialCriteria?.rules.find((r) => r.rule_type === "MAX_ACTIVE_BACKLOGS")?.numeric_value ?? 0;
 
-  const [companyId, setCompanyId] = useState<number>(initialDrive?.company_id ?? (state.companies[0]?.id || 1));
+  const initialCompanyId = initialDrive?.company_id ?? (state.companies[0]?.id || 1);
+  const initialCompany = state.companies.find((c) => c.id === initialCompanyId);
+  const initialDeptRule = initialCriteria?.rules.find((r) => r.rule_type === "ALLOWED_DEPARTMENTS");
+  const initialDeptIds = initialDeptRule?.item_ids ?? (initialCompany?.department_ids || []);
+
+  const [companyId, setCompanyId] = useState<number>(initialCompanyId);
+  const [departmentIds, setDepartmentIds] = useState<number[]>(initialDeptIds);
   const [yearId, setYearId] = useState<number>(initialDrive?.academic_year_id ?? (state.academic_years[0]?.id || 2));
   const [title, setTitle] = useState(initialDrive?.title ?? "");
   const [description, setDescription] = useState(initialDrive?.description ?? "");
@@ -1200,10 +1432,22 @@ function DriveModal({
   const [stages] = useState(["Aptitude Test", "Technical Interview", "HR Round"]);
   const [error, setError] = useState<string | null>(null);
 
+  const handleCompanyChange = (newCompanyId: number) => {
+    setCompanyId(newCompanyId);
+    const comp = state.companies.find((c) => c.id === newCompanyId);
+    if (comp?.department_ids && comp.department_ids.length > 0) {
+      setDepartmentIds(comp.department_ids);
+    }
+  };
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!title.trim()) {
       setError("Drive title is required.");
+      return;
+    }
+    if (departmentIds.length === 0) {
+      setError("Department selection is compulsory for placement drives. Please select at least one department.");
       return;
     }
 
@@ -1227,6 +1471,18 @@ function DriveModal({
           if (minRule) minRule.numeric_value = Number(minCgpa);
           const maxRule = cs.rules.find((r) => r.rule_type === "MAX_ACTIVE_BACKLOGS");
           if (maxRule) maxRule.numeric_value = Number(maxBacklogs);
+
+          const deptRule = cs.rules.find((r) => r.rule_type === "ALLOWED_DEPARTMENTS");
+          if (deptRule) {
+            deptRule.item_ids = departmentIds;
+          } else {
+            cs.rules.push({
+              id: Date.now() + 3,
+              criteria_set_id: cs.id,
+              rule_type: "ALLOWED_DEPARTMENTS",
+              item_ids: departmentIds,
+            });
+          }
         }
       });
 
@@ -1236,7 +1492,7 @@ function DriveModal({
         action: "UPDATE_DRIVE",
         entityType: "Drive",
         entityId: initialDrive.id,
-        summary: `Updated placement drive ${title.trim()}`,
+        summary: `Updated placement drive ${title.trim()} (Departments: ${departmentIds.map((id) => state.departments.find((d) => d.id === id)?.code).join(", ")})`,
       });
     } else {
       const driveId = state.drives.length > 0 ? Math.max(...state.drives.map((d) => d.id)) + 1 : 1;
@@ -1254,6 +1510,12 @@ function DriveModal({
           criteria_set_id: criteriaSetId,
           rule_type: "MAX_ACTIVE_BACKLOGS",
           numeric_value: Number(maxBacklogs),
+        },
+        {
+          id: criteriaSetId + 3,
+          criteria_set_id: criteriaSetId,
+          rule_type: "ALLOWED_DEPARTMENTS",
+          item_ids: departmentIds,
         },
       ];
 
@@ -1291,7 +1553,7 @@ function DriveModal({
         action: "CREATE_DRIVE",
         entityType: "Drive",
         entityId: title.trim(),
-        summary: `Created recruitment drive ${title.trim()} with ${stages.length} stages`,
+        summary: `Created recruitment drive ${title.trim()} with ${departmentIds.length} eligible departments`,
       });
     }
 
@@ -1323,7 +1585,7 @@ function DriveModal({
               <label className="font-semibold text-slate-700 dark:text-slate-300 mb-1 block">Recruiter Company *</label>
               <select
                 value={companyId}
-                onChange={(e) => setCompanyId(Number(e.target.value))}
+                onChange={(e) => handleCompanyChange(Number(e.target.value))}
                 className="w-full rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-900 px-3.5 py-2 font-medium"
               >
                 {state.companies.map((c) => (
@@ -1360,6 +1622,42 @@ function DriveModal({
               onChange={(e) => setTitle(e.target.value)}
               className="w-full rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-900 px-3.5 py-2 font-semibold"
             />
+          </div>
+
+          <div>
+            <div className="flex items-center justify-between mb-1.5">
+              <label className="font-semibold text-slate-700 dark:text-slate-300">
+                Eligible Department(s) * <span className="text-rose-500 font-bold">(Compulsory in Placement Drive)</span>
+              </label>
+              <span className="text-[10px] text-slate-400">
+                {departmentIds.length === 0 ? "None selected" : `${departmentIds.length} selected`}
+              </span>
+            </div>
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
+              {state.departments.map((dept) => {
+                const isChecked = departmentIds.includes(dept.id);
+                return (
+                  <button
+                    key={dept.id}
+                    type="button"
+                    onClick={() => {
+                      setDepartmentIds((prev) =>
+                        isChecked ? prev.filter((id) => id !== dept.id) : [...prev, dept.id]
+                      );
+                    }}
+                    className={clsx(
+                      "flex items-center justify-between px-3 py-2 rounded-xl border text-xs font-semibold transition-all",
+                      isChecked
+                        ? "border-[var(--color-brand)] bg-[var(--color-brand)]/10 text-[var(--color-brand)] ring-1 ring-[var(--color-brand)]"
+                        : "border-slate-200 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-900/50 text-slate-600 dark:text-slate-400 hover:border-slate-300"
+                    )}
+                  >
+                    <span>{dept.code}</span>
+                    <span className="text-[10px] opacity-75">{dept.name.split(" ")[0]}</span>
+                  </button>
+                );
+              })}
+            </div>
           </div>
 
           <div>

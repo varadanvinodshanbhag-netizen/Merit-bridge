@@ -13,8 +13,6 @@ import {
   Briefcase,
   ArrowRight,
   Landmark,
-  AlertCircle,
-  CheckCircle2,
   Lock,
 } from "lucide-react";
 import clsx from "clsx";
@@ -71,26 +69,26 @@ function UserMenu() {
         aria-label="User menu"
         aria-expanded={open}
         aria-haspopup="menu"
-        className="flex items-center gap-2.5 rounded-xl px-2 py-1 hover:bg-slate-100 dark:hover:bg-slate-800/60 transition-colors duration-75"
+        className="flex items-center gap-2.5 rounded-lg px-2 py-1.5 hover:bg-[var(--color-surface-2)] transition-colors duration-150 ease-unslop"
       >
-        <div className="w-7 h-7 rounded-full bg-gradient-to-tr from-amber-500 to-rose-500 text-[11px] font-bold text-white flex items-center justify-center shrink-0 shadow-xs">
+        <div className="w-7 h-7 rounded-lg bg-[var(--color-surface-2)] border border-[var(--color-border)] text-[11px] font-mono font-semibold text-[var(--color-text)] flex items-center justify-center shrink-0">
           {initials}
         </div>
         <div className="hidden sm:block text-left leading-tight">
-          <p className="text-xs font-semibold text-slate-800 dark:text-slate-100">{displayName}</p>
-          <p className="text-[10px] text-slate-400">{displayRole}</p>
+          <p className="text-xs font-medium text-[var(--color-text)]">{displayName}</p>
+          <p className="text-[11px] text-[var(--color-text-muted)] mt-0.5">{displayRole}</p>
         </div>
-        <ChevronDown size={12} className="text-slate-400" aria-hidden="true" />
+        <ChevronDown size={13} className="text-[var(--color-text-muted)]" aria-hidden="true" />
       </button>
 
       {open && (
         <div
           role="menu"
-          className="absolute right-0 mt-1.5 w-44 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-[#161922] shadow-xl py-1 z-50 animate-in fade-in duration-75"
+          className="absolute right-0 mt-1.5 w-48 rounded-xl border border-[var(--color-border)] bg-[var(--color-surface)] shadow-lg py-1 z-50 animate-in fade-in duration-150 ease-unslop"
         >
-          <div className="px-3 py-1.5 border-b border-slate-100 dark:border-slate-800">
-            <p className="text-xs font-semibold text-slate-900 dark:text-slate-100">{displayName}</p>
-            <p className="text-[10px] text-slate-400 truncate">{displayRole}</p>
+          <div className="px-3 py-2 border-b border-[var(--color-border)]">
+            <p className="text-xs font-semibold text-[var(--color-text)]">{displayName}</p>
+            <p className="text-[11px] text-[var(--color-text-muted)] truncate mt-0.5">{displayRole}</p>
           </div>
           <button
             role="menuitem"
@@ -98,9 +96,9 @@ function UserMenu() {
               setOpen(false);
               lockSession();
             }}
-            className="w-full text-left px-3 py-1.5 text-xs font-medium text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800/60 flex items-center gap-2 transition-colors duration-75"
+            className="w-full text-left px-3 py-2 text-xs font-medium text-[var(--color-text-secondary)] hover:text-[var(--color-text)] hover:bg-[var(--color-surface-2)] flex items-center gap-2 transition-colors duration-150 ease-unslop"
           >
-            <Lock size={13} className="text-slate-400" />
+            <Lock size={14} className="text-[var(--color-text-muted)]" />
             <span>Lock Terminal</span>
           </button>
           <button
@@ -109,7 +107,7 @@ function UserMenu() {
               setUser(null);
               setOpen(false);
             }}
-            className="w-full text-left px-3 py-1.5 text-xs font-medium text-rose-500 hover:bg-rose-50 dark:hover:bg-rose-950/30 transition-colors duration-75"
+            className="w-full text-left px-3 py-2 text-xs font-medium text-[#e5484d] hover:bg-rose-500/10 transition-colors duration-150 ease-unslop"
           >
             Sign out
           </button>
@@ -204,19 +202,22 @@ export default function Header() {
     <>
       <header
         className={clsx(
-          "flex h-14 shrink-0 items-center justify-between gap-4 border-b border-slate-200/70 dark:border-slate-800/80 px-5",
-          "bg-white dark:bg-[#12151d] transition-colors duration-75 select-none"
+          "flex h-14 shrink-0 items-center justify-between gap-4 border-b border-[var(--color-border)] px-6",
+          "bg-[var(--color-surface)] select-none transition-colors duration-150 ease-unslop"
         )}
       >
-        {/* Institutional Title & Search (Matching Uizard Prototype) */}
+        {/* Institutional Title & Search */}
         <div className="flex items-center gap-4 flex-1 max-w-md">
           <div className="flex items-center gap-2">
-            <div className="w-7 h-7 rounded-lg bg-[#9e2040]/15 text-[#9e2040] flex items-center justify-center shrink-0">
-              <Landmark size={16} />
+            <div className="w-7 h-7 rounded-lg bg-[var(--color-surface-2)] text-[var(--color-brand)] border border-[var(--color-border)] flex items-center justify-center shrink-0">
+              <Landmark size={15} strokeWidth={1.75} />
             </div>
-            <div className="hidden sm:block leading-none">
-              <span className="text-sm font-bold tracking-tight text-slate-900 dark:text-slate-100">
+            <div className="hidden sm:block leading-tight">
+              <span className="text-xs font-semibold tracking-tight text-[var(--color-text)] block">
                 MeritBridge
+              </span>
+              <span className="text-[10px] font-medium text-[var(--color-text-muted)] block">
+                From RNS Rural Polytechnic
               </span>
             </div>
           </div>
@@ -225,56 +226,54 @@ export default function Header() {
             type="button"
             onClick={() => setPaletteOpen(true)}
             className={clsx(
-              "w-full flex items-center justify-between rounded-xl border border-slate-200 dark:border-slate-800",
-              "bg-slate-50 dark:bg-[#181b24] pl-3 pr-2.5 py-1.5 text-xs text-left",
-              "text-slate-400 dark:text-slate-500 hover:border-slate-300 dark:hover:border-slate-700 transition-colors duration-75"
+              "w-full flex items-center justify-between rounded-lg border border-[var(--color-border)]",
+              "bg-[var(--color-surface-2)] pl-3 pr-2 py-1.5 text-xs text-left",
+              "text-[var(--color-text-muted)] hover:border-[var(--color-text-muted)] transition-colors duration-150 ease-unslop"
             )}
           >
             <span className="flex items-center gap-2">
-              <Search size={14} className="text-slate-400" aria-hidden="true" />
-              <span>Search drives, companies...</span>
+              <Search size={14} strokeWidth={1.5} className="text-[var(--color-text-muted)]" aria-hidden="true" />
+              <span>Search</span>
             </span>
-            <kbd className="hidden sm:inline-flex items-center rounded border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 px-1 py-0.5 text-[9px] font-semibold text-slate-500 dark:text-slate-400">
+            <kbd className="hidden sm:inline-flex items-center rounded border border-[var(--color-border)] bg-[var(--color-surface)] px-1.5 py-0.5 text-[10px] font-mono text-[var(--color-text-muted)]">
               ⌘K
             </kbd>
           </button>
         </div>
 
-        {/* Right side: Burgundy Notifications pill + User Menu (Uizard exact lockup) */}
-        <div className="flex items-center gap-2 sm:gap-3">
+        {/* Right side: Quiet Actions + User Menu */}
+        <div className="flex items-center gap-2 sm:gap-2.5">
           <ThemeToggle />
 
           <button
             onClick={() => lockSession()}
             aria-label="Lock terminal session"
             title="Lock Terminal Session"
-            className="rounded-lg p-1.5 text-slate-400 hover:text-slate-200 hover:bg-slate-800/60 transition-colors duration-75"
+            className="w-8 h-8 rounded-lg flex items-center justify-center text-[var(--color-text-muted)] hover:text-[var(--color-text)] hover:bg-[var(--color-surface-2)] transition-colors duration-150 ease-unslop"
           >
-            <Lock size={15} aria-hidden="true" />
+            <Lock size={15} strokeWidth={1.5} aria-hidden="true" />
           </button>
 
-          {/* Burgundy Notifications pill button from Uizard */}
+          {/* Quiet Notifications button with institutional status dot */}
           <div className="relative" ref={notifRef}>
             <button
               onClick={() => setNotifOpen((p) => !p)}
-              className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-[#9e2040] hover:bg-[#851833] text-white text-xs font-semibold shadow-xs transition-colors duration-75"
+              aria-label="Notifications (2 unread)"
+              className="w-8 h-8 rounded-lg flex items-center justify-center text-[var(--color-text-muted)] hover:text-[var(--color-text)] hover:bg-[var(--color-surface-2)] transition-colors duration-150 ease-unslop relative"
             >
-              <Bell size={13} aria-hidden="true" />
-              <span>Notifications</span>
-              <span className="w-4 h-4 rounded-full bg-white/25 text-[10px] font-bold flex items-center justify-center">
-                2
-              </span>
+              <Bell size={15} strokeWidth={1.5} aria-hidden="true" />
+              <span className="absolute top-1.5 right-1.5 w-2 h-2 rounded-full bg-[var(--color-brand)]" />
             </button>
 
             {/* Notifications Popover Dropdown */}
             {notifOpen && (
-              <div className="absolute right-0 mt-2 w-80 rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-[#161922] shadow-2xl p-3 z-50 animate-in fade-in zoom-in-95 duration-75">
-                <div className="flex items-center justify-between pb-2 border-b border-slate-100 dark:border-slate-800">
-                  <h4 className="text-xs font-bold text-slate-900 dark:text-slate-100">
-                    Notifications &amp; Alerts
+              <div className="absolute right-0 mt-2 w-80 rounded-xl border border-[var(--color-border)] bg-[var(--color-surface)] shadow-lg p-3 z-50 animate-in fade-in duration-150 ease-unslop">
+                <div className="flex items-center justify-between pb-2 border-b border-[var(--color-border)]">
+                  <h4 className="text-xs font-semibold text-[var(--color-text)]">
+                    Notifications
                   </h4>
-                  <span className="text-[10px] text-slate-400 font-medium">
-                    2 new
+                  <span className="text-[11px] font-mono text-[var(--color-text-muted)]">
+                    2 unread
                   </span>
                 </div>
 
@@ -284,10 +283,10 @@ export default function Header() {
                       setNotifOpen(false);
                       navigate("/drives");
                     }}
-                    className="p-2.5 rounded-xl border border-amber-500/20 bg-amber-500/5 dark:bg-amber-500/10 cursor-pointer hover:border-amber-500/40 transition-colors"
+                    className="p-2.5 rounded-lg border border-[var(--color-border)] bg-[var(--color-surface-2)] cursor-pointer hover:border-[var(--color-text-muted)] transition-colors duration-150 ease-unslop"
                   >
                     <div className="flex items-start gap-2">
-                      <AlertCircle size={14} className="text-amber-500 shrink-0 mt-0.5" />
+                      <div className="w-1.5 h-1.5 rounded-full bg-[#fde68a] mt-1.5 shrink-0" />
                       <div>
                         <p className="text-xs font-semibold text-slate-800 dark:text-slate-200">
                           Infosys Drive Registration
@@ -304,10 +303,10 @@ export default function Header() {
                       setNotifOpen(false);
                       navigate("/companies");
                     }}
-                    className="p-2.5 rounded-xl border border-blue-500/20 bg-blue-500/5 dark:bg-blue-500/10 cursor-pointer hover:border-blue-500/40 transition-colors"
+                    className="p-2.5 rounded-lg border border-[var(--color-border)] bg-[var(--color-surface-2)] cursor-pointer hover:border-[var(--color-text-muted)] transition-colors duration-150 ease-unslop"
                   >
                     <div className="flex items-start gap-2">
-                      <CheckCircle2 size={14} className="text-blue-500 shrink-0 mt-0.5" />
+                      <div className="w-1.5 h-1.5 rounded-full bg-[#93c5fd] mt-1.5 shrink-0" />
                       <div>
                         <p className="text-xs font-semibold text-slate-800 dark:text-slate-200">
                           Aerodyne Labs Announced
@@ -328,7 +327,7 @@ export default function Header() {
                     }}
                     className="text-[#9e2040] hover:underline font-semibold"
                   >
-                    View Interview Calendar
+                    Interview calendar
                   </button>
                   <button
                     onClick={() => setNotifOpen(false)}
@@ -386,7 +385,7 @@ export default function Header() {
                   {/* Students section */}
                   {searchResults.students.length > 0 && (
                     <div>
-                      <span className="px-2 text-[10px] font-bold text-slate-400 uppercase tracking-wider block mb-1">
+                      <span className="px-2 text-[11px] font-medium text-[var(--color-text-muted)] block mb-1.5">
                         Students ({searchResults.students.length})
                       </span>
                       <div className="space-y-0.5">
@@ -418,7 +417,7 @@ export default function Header() {
                   {/* Companies section */}
                   {searchResults.companies.length > 0 && (
                     <div>
-                      <span className="px-2 text-[10px] font-bold text-slate-400 uppercase tracking-wider block mb-1">
+                      <span className="px-2 text-[11px] font-medium text-[var(--color-text-muted)] block mb-1.5">
                         Companies ({searchResults.companies.length})
                       </span>
                       <div className="space-y-0.5">
@@ -450,7 +449,7 @@ export default function Header() {
                   {/* Drives section */}
                   {searchResults.drives.length > 0 && (
                     <div>
-                      <span className="px-2 text-[10px] font-bold text-slate-400 uppercase tracking-wider block mb-1">
+                      <span className="px-2 text-[11px] font-medium text-[var(--color-text-muted)] block mb-1.5">
                         Placement Drives ({searchResults.drives.length})
                       </span>
                       <div className="space-y-0.5">

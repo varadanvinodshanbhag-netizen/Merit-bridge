@@ -73,6 +73,10 @@ export function StudentProfileModal({ studentId, onClose }: Props) {
   const [editGender, setEditGender] = useState<Gender>(student?.gender || "Male");
   const [editPassingYear, setEditPassingYear] = useState(student?.passing_year || 2025);
   const [editCgpa, setEditCgpa] = useState(student?.cgpa !== null && student?.cgpa !== undefined ? String(student.cgpa) : "");
+  const [editInternshipStatus, setEditInternshipStatus] = useState<"None" | "Active" | "Completed">(student?.internship_status || "None");
+  const [editInternshipCompany, setEditInternshipCompany] = useState(student?.internship_company || "");
+  const [editInternshipRole, setEditInternshipRole] = useState(student?.internship_role || "");
+  const [editInternshipDuration, setEditInternshipDuration] = useState(student?.internship_duration || "");
 
   if (!student) return null;
 
@@ -336,6 +340,10 @@ export function StudentProfileModal({ studentId, onClose }: Props) {
         if (editCgpa.trim()) {
           s.cgpa = Number(editCgpa);
         }
+        s.internship_status = editInternshipStatus;
+        s.internship_company = editInternshipStatus !== "None" ? editInternshipCompany.trim() || undefined : undefined;
+        s.internship_role = editInternshipStatus !== "None" ? editInternshipRole.trim() || undefined : undefined;
+        s.internship_duration = editInternshipStatus !== "None" ? editInternshipDuration.trim() || undefined : undefined;
         s.updated_at = now;
         s.updated_by = user?.id || 1;
       }
@@ -627,6 +635,107 @@ export function StudentProfileModal({ studentId, onClose }: Props) {
                         value={editCgpa}
                         onChange={(e) => setEditCgpa(e.target.value)}
                         className="w-full rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 px-2.5 py-1.5 text-xs text-slate-900 dark:text-slate-100 font-mono"
+                      />
+                    </div>
+                  </div>
+                )}
+              </div>
+
+              {/* Internship & Industry Experience Card */}
+              <div className="rounded-2xl border border-slate-200/90 dark:border-slate-800 p-5 bg-slate-50/50 dark:bg-slate-900/30 space-y-3">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <Briefcase size={15} className="text-slate-400" />
+                    <h3 className="text-xs font-bold uppercase tracking-wider text-slate-400">
+                      Internship & Industry Experience
+                    </h3>
+                  </div>
+                  {student.internship_status === "Active" ? (
+                    <span className="inline-flex items-center gap-1 rounded-full bg-emerald-50 text-emerald-700 dark:bg-emerald-950/40 dark:text-emerald-400 border border-emerald-200/60 px-2.5 py-0.5 text-[11px] font-bold">
+                      Active Internship
+                    </span>
+                  ) : student.internship_status === "Completed" ? (
+                    <span className="inline-flex items-center gap-1 rounded-full bg-blue-50 text-blue-700 dark:bg-blue-950/40 dark:text-blue-400 border border-blue-200/60 px-2.5 py-0.5 text-[11px] font-bold">
+                      Completed Internship
+                    </span>
+                  ) : (
+                    <span className="inline-flex items-center gap-1 rounded-full bg-slate-100 text-slate-600 dark:bg-slate-800 dark:text-slate-400 px-2.5 py-0.5 text-[11px] font-medium">
+                      No Active Internship
+                    </span>
+                  )}
+                </div>
+
+                {!isEditingPersonal ? (
+                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 text-xs pt-1">
+                    <div>
+                      <p className="text-slate-400 text-[11px]">Host Organization</p>
+                      <p className="font-semibold text-slate-800 dark:text-slate-200 mt-0.5">
+                        {student.internship_company || "Not assigned"}
+                      </p>
+                    </div>
+                    <div>
+                      <p className="text-slate-400 text-[11px]">Role / Domain</p>
+                      <p className="font-semibold text-slate-800 dark:text-slate-200 mt-0.5">
+                        {student.internship_role || "Not specified"}
+                      </p>
+                    </div>
+                    <div>
+                      <p className="text-slate-400 text-[11px]">Duration / Timeline</p>
+                      <p className="font-semibold text-slate-800 dark:text-slate-200 mt-0.5">
+                        {student.internship_duration || "Not specified"}
+                      </p>
+                    </div>
+                  </div>
+                ) : (
+                  <div className="grid grid-cols-1 sm:grid-cols-4 gap-3 text-xs pt-1">
+                    <div>
+                      <label className="text-[11px] font-semibold text-slate-600 dark:text-slate-400 block mb-1">
+                        Internship Status
+                      </label>
+                      <select
+                        value={editInternshipStatus}
+                        onChange={(e) => setEditInternshipStatus(e.target.value as any)}
+                        className="w-full rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 px-2.5 py-1.5 text-xs text-slate-900 dark:text-slate-100"
+                      >
+                        <option value="None">None</option>
+                        <option value="Active">Active</option>
+                        <option value="Completed">Completed</option>
+                      </select>
+                    </div>
+                    <div>
+                      <label className="text-[11px] font-semibold text-slate-600 dark:text-slate-400 block mb-1">
+                        Host Company
+                      </label>
+                      <input
+                        type="text"
+                        placeholder="e.g. Bosch, Tata Motors"
+                        value={editInternshipCompany}
+                        onChange={(e) => setEditInternshipCompany(e.target.value)}
+                        className="w-full rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 px-2.5 py-1.5 text-xs text-slate-900 dark:text-slate-100"
+                      />
+                    </div>
+                    <div>
+                      <label className="text-[11px] font-semibold text-slate-600 dark:text-slate-400 block mb-1">
+                        Role / Designation
+                      </label>
+                      <input
+                        type="text"
+                        placeholder="e.g. Trainee Engineer"
+                        value={editInternshipRole}
+                        onChange={(e) => setEditInternshipRole(e.target.value)}
+                        className="w-full rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 px-2.5 py-1.5 text-xs text-slate-900 dark:text-slate-100"
+                      />
+                    </div>
+                    <div>
+                      <label className="text-[11px] font-semibold text-slate-600 dark:text-slate-400 block mb-1">
+                        Duration
+                      </label>
+                      <input
+                        type="text"
+                        placeholder="e.g. 6 Months"
+                        value={editInternshipDuration}
+                        onChange={(e) => setEditInternshipDuration(e.target.value)}
+                        className="w-full rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 px-2.5 py-1.5 text-xs text-slate-900 dark:text-slate-100"
                       />
                     </div>
                   </div>

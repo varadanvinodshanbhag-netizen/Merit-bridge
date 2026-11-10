@@ -249,8 +249,8 @@ export default function StudentsPage() {
       {/* Header Row */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h1 className="text-xl lg:text-2xl font-bold tracking-tight text-slate-900 dark:text-slate-100">
-            Student Management
+          <h1 className="text-xl lg:text-2xl font-bold tracking-tight text-slate-900 dark:text-slate-100 flex items-center gap-2">
+            <span>Student Directory</span>
           </h1>
           <p className="mt-0.5 text-xs lg:text-sm text-slate-500 dark:text-slate-400">
             {showArchived ? "Archived Students Directory" : "Active Students Directory"} · {filteredStudents.length} records found
@@ -277,7 +277,7 @@ export default function StudentsPage() {
       </div>
 
       {/* Filter and Search Bar */}
-      <div className="rounded-2xl border border-slate-200/90 dark:border-slate-800/80 bg-white dark:bg-[#12151d] p-4 shadow-[0_1px_3px_rgba(0,0,0,0.06),0_1px_2px_rgba(0,0,0,0.04)] ring-1 ring-slate-900/[0.04] dark:ring-0 space-y-3">
+      <div className="rounded-2xl border border-slate-200/90 dark:border-slate-800/80 bg-white dark:bg-[#12151d] p-4 shadow-[0_1px_3px_rgba(0,0,0,0.06),0_1px_2px_rgba(0,0,0,0.04)] ring-1 ring-slate-900/[0.04] dark:ring-0">
         <div className="flex flex-col md:flex-row items-center gap-3">
           {/* Search box */}
           <div className="relative flex-1 w-full">
@@ -357,7 +357,7 @@ export default function StudentsPage() {
             }}
             className="w-full md:w-auto rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 px-3 py-2 text-xs font-medium text-slate-700 dark:text-slate-300"
           >
-            <option value="ALL">All Status</option>
+            <option value="ALL">All Placements</option>
             <option value="PLACED">Placed Only</option>
             <option value="NOT_PLACED">Not Placed Only</option>
           </select>
@@ -696,6 +696,10 @@ function AddStudentModal({ onClose }: { onClose: () => void }) {
   const [phone, setPhone] = useState("");
   const [gender, setGender] = useState<Gender>("Male");
   const [cgpa, setCgpa] = useState<string>("");
+  const [internshipStatus, setInternshipStatus] = useState<"None" | "Active" | "Completed">("None");
+  const [internshipCompany, setInternshipCompany] = useState("");
+  const [internshipRole, setInternshipRole] = useState("");
+  const [internshipDuration, setInternshipDuration] = useState("");
   const [error, setError] = useState<string | null>(null);
 
   // Cascade department and batch when course changes
@@ -754,6 +758,10 @@ function AddStudentModal({ onClose }: { onClose: () => void }) {
         batch_id: batchId,
         passing_year: passingYear,
         cgpa: cgpa ? Number(cgpa) : null,
+        internship_status: internshipStatus,
+        internship_company: internshipStatus !== "None" ? internshipCompany.trim() || undefined : undefined,
+        internship_role: internshipStatus !== "None" ? internshipRole.trim() || undefined : undefined,
+        internship_duration: internshipStatus !== "None" ? internshipDuration.trim() || undefined : undefined,
         created_at: now,
         updated_at: now,
         created_by: user?.id || 1,
@@ -933,6 +941,62 @@ function AddStudentModal({ onClose }: { onClose: () => void }) {
                 className="w-full rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-900 px-3 py-2 text-xs"
               />
             </div>
+          </div>
+
+          <div className="border-t border-slate-100 dark:border-slate-800 pt-3 space-y-3">
+            <h4 className="text-xs font-bold text-slate-700 dark:text-slate-300">Internship Details (Optional)</h4>
+            <div className="grid grid-cols-2 gap-3">
+              <div>
+                <label className="text-[11px] font-semibold text-slate-600 dark:text-slate-400 mb-1 block">Internship Status</label>
+                <select
+                  value={internshipStatus}
+                  onChange={(e) => setInternshipStatus(e.target.value as any)}
+                  className="w-full rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-900 px-3 py-2 text-xs"
+                >
+                  <option value="None">None (Seeking / Not Enrolled)</option>
+                  <option value="Active">Active Internship</option>
+                  <option value="Completed">Completed Internship</option>
+                </select>
+              </div>
+
+              {internshipStatus !== "None" && (
+                <div>
+                  <label className="text-[11px] font-semibold text-slate-600 dark:text-slate-400 mb-1 block">Host Company</label>
+                  <input
+                    type="text"
+                    placeholder="e.g. Bosch Rexroth, Tata Motors"
+                    value={internshipCompany}
+                    onChange={(e) => setInternshipCompany(e.target.value)}
+                    className="w-full rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-900 px-3 py-2 text-xs"
+                  />
+                </div>
+              )}
+            </div>
+
+            {internshipStatus !== "None" && (
+              <div className="grid grid-cols-2 gap-3">
+                <div>
+                  <label className="text-[11px] font-semibold text-slate-600 dark:text-slate-400 mb-1 block">Role / Designation</label>
+                  <input
+                    type="text"
+                    placeholder="e.g. Trainee Engineer, Full Stack"
+                    value={internshipRole}
+                    onChange={(e) => setInternshipRole(e.target.value)}
+                    className="w-full rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-900 px-3 py-2 text-xs"
+                  />
+                </div>
+                <div>
+                  <label className="text-[11px] font-semibold text-slate-600 dark:text-slate-400 mb-1 block">Duration</label>
+                  <input
+                    type="text"
+                    placeholder="e.g. 6 Months, Jan - Jun 2025"
+                    value={internshipDuration}
+                    onChange={(e) => setInternshipDuration(e.target.value)}
+                    className="w-full rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-900 px-3 py-2 text-xs"
+                  />
+                </div>
+              </div>
+            )}
           </div>
 
           <div className="flex items-center justify-end gap-2.5 pt-3">

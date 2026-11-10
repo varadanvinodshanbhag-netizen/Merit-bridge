@@ -2,66 +2,72 @@
 @import "tailwindcss/components";
 @import "tailwindcss/utilities";
 
-/* ─── MeritBridge design tokens ─── */
+/* ─── MeritBridge unslop tokens (Graphite ramp + Oxblood brand) ─── */
 :root {
   /* Brand */
   --color-brand:         #9e2040;
   --color-brand-hover:   #7f1a33;
   --color-brand-light:   #fbe8ec;
 
-  /* Surface */
-  --color-bg:            #f4f6f9;
+  /* Surfaces (Light Graphite) */
+  --color-bg:            #fafafa;
   --color-surface:       #ffffff;
-  --color-surface-2:     #f1f3f5;
-  --color-border:        #e2e8f0;
+  --color-surface-2:     #f4f4f5;
+  --color-sidebar-bg:    #ffffff;
+  --color-border:        rgba(23, 23, 23, 0.08);
 
-  /* Text */
-  --color-text:          #111827;
-  --color-text-muted:    #6b7280;
+  /* Text roles (3 deliberate roles) */
+  --color-text:          #171717;
+  --color-text-secondary:#525252;
+  --color-text-muted:    #737373;
   --color-text-inverse:  #ffffff;
 
   /* Sidebar */
-  --color-sidebar-bg:    #ffffff;
-  --color-sidebar-text:  #374151;
-  --color-sidebar-active:#9e2040;
+  --color-sidebar-text:  #525252;
+  --color-sidebar-active:#171717;
 
-  /* Status chips */
-  --color-selected:      #d1fae5;
-  --color-selected-text: #065f46;
-  --color-offered:       #dbeafe;
+  /* Status chips (Toned semantic) */
+  --color-selected:      #e6f7ef;
+  --color-selected-text: #16a34a;
+  --color-offered:       #eff6ff;
   --color-offered-text:  #1e40af;
-  --color-applied:       #f3f4f6;
-  --color-applied-text:  #374151;
-  --color-scheduled:     #fef9c3;
-  --color-scheduled-text:#92400e;
-  --color-joined:        #ede9fe;
-  --color-joined-text:   #5b21b6;
+  --color-applied:       #f4f4f5;
+  --color-applied-text:  #525252;
+  --color-scheduled:     #fefce8;
+  --color-scheduled-text:#854d0e;
+  --color-joined:        #f5f3ff;
+  --color-joined-text:   #6b21a8;
 }
 
 .dark {
-  --color-bg:            #0f1117;
-  --color-surface:       #1a1d27;
-  --color-surface-2:     #232634;
-  --color-border:        #2e3348;
+  /* Surfaces (Dark Graphite) */
+  --color-bg:            #141415;
+  --color-surface:       #19191b;
+  --color-surface-2:     #232325;
+  --color-sidebar-bg:    #0f0f10;
+  --color-border:        rgba(237, 237, 237, 0.08);
 
-  --color-text:          #f0f2f5;
-  --color-text-muted:    #8b92a5;
+  /* Text roles */
+  --color-text:          #ededed;
+  --color-text-secondary:#a1a1a6;
+  --color-text-muted:    #85858b;
   --color-text-inverse:  #ffffff;
 
-  --color-sidebar-bg:    #1a1d27;
-  --color-sidebar-text:  #c8cdd8;
-  --color-sidebar-active:#9e2040;
+  /* Sidebar */
+  --color-sidebar-text:  #a1a1a6;
+  --color-sidebar-active:#ededed;
 
-  --color-selected:      #064e3b;
-  --color-selected-text: #6ee7b7;
-  --color-offered:       #1e3a5f;
+  /* Status chips (Toned semantic) */
+  --color-selected:      #0b291b;
+  --color-selected-text: #4cc38a;
+  --color-offered:       #112338;
   --color-offered-text:  #93c5fd;
-  --color-applied:       #2e3348;
-  --color-applied-text:  #c8cdd8;
-  --color-scheduled:     #4b3900;
+  --color-applied:       #232325;
+  --color-applied-text:  #a1a1a6;
+  --color-scheduled:     #2e220a;
   --color-scheduled-text:#fde68a;
-  --color-joined:        #3b0764;
-  --color-joined-text:   #c4b5fd;
+  --color-joined:        #29183b;
+  --color-joined-text:   #d8b4fe;
 }
 
 /* ─── Base resets ─── */
@@ -82,12 +88,18 @@ body {
   background-color: var(--color-bg);
   color: var(--color-text);
   -webkit-font-smoothing: antialiased;
+  font-feature-settings: "cv02", "cv03", "cv04", "cv11", "tnum";
 }
 
 #root {
   height: 100%;
   display: flex;
   flex-direction: column;
+}
+
+/* Tabular numbers for all numbers/metrics */
+.tabular-nums {
+  font-variant-numeric: tabular-nums;
 }
 
 /* ─── Scrollbars ─── */
@@ -110,15 +122,4 @@ body {
 :focus-visible {
   outline: 2px solid var(--color-brand);
   outline-offset: 2px;
-}
-
-/* ─── Card Shake Animation (from SecureHash Lab) ─── */
-@keyframes shake {
-  0%, 100% { transform: translateX(0); }
-  20%, 60% { transform: translateX(-6px); }
-  40%, 80% { transform: translateX(6px); }
-}
-
-.shake {
-  animation: shake 0.4s ease;
 }

@@ -22,6 +22,10 @@ export default {
       },
       fontFamily: {
         sans: ["Inter", "ui-sans-serif", "system-ui", "sans-serif"],
+        mono: ["ui-monospace", "SFMono-Regular", "Menlo", "Monaco", "Consolas", "monospace"],
+      },
+      transitionTimingFunction: {
+        unslop: "cubic-bezier(0.22, 1, 0.36, 1)",
       },
     },
   },

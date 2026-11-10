@@ -70,6 +70,7 @@ export interface Batch {
 }
 
 export type Gender = "Male" | "Female" | "Other";
+export type InternshipStatus = "None" | "Active" | "Completed";
 
 export interface Student {
   id: number;
@@ -86,6 +87,10 @@ export interface Student {
   batch_id: number;
   passing_year: number;
   cgpa?: number | null;
+  internship_status?: InternshipStatus;
+  internship_company?: string;
+  internship_role?: string;
+  internship_duration?: string;
   notes?: string;
   archived_at?: string | null;
   archived_by?: number | null;
@@ -185,6 +190,7 @@ export interface Company {
   notes?: string;
   status: CompanyStatus;
   default_criteria_set_id?: number;
+  department_ids?: number[]; // Target departments (optional in company settings)
   contacts: CompanyContact[];
   job_roles: JobRole[];
   created_at: string;

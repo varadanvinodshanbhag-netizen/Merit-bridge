@@ -1,19 +1,40 @@
-# Node / Build artifacts
+# Node & Frontend dependencies
 node_modules/
 meritbridge/node_modules/
+.npm
+.eslintcache
+*.tsbuildinfo
+
+# Build outputs
 dist/
 meritbridge/dist/
+.vite/
 
-# Tauri / Rust build artifacts
+# Tauri / Rust compiler output
 target/
+src-tauri/target/
 meritbridge/src-tauri/target/
 meritbridge/src-tauri/gen/
-*.o
-*.a
+
+# Binaries, archives, and installer staging
 *.exe
 *.dll
+*.zip
+*.msi
+*.pdb
+*.7z
+MeritBridge-App/
 
-# OS files
+# OS metadata
 .DS_Store
 Thumbs.db
+desktop.ini
+
+# Logs & temp files
 *.log
+npm-debug.log*
+yarn-debug.log*
+pnpm-debug.log*
+logs/
+*.tmp
+.cache/

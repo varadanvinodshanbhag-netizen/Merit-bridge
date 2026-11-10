@@ -262,6 +262,22 @@ export default function CompaniesPage() {
                           <span className="truncate text-blue-600 dark:text-blue-400">{c.website}</span>
                         </div>
                       )}
+                      {c.department_ids && c.department_ids.length > 0 && (
+                        <div className="flex flex-wrap items-center gap-1 pt-1">
+                          <span className="text-[10px] text-slate-400 font-medium mr-1">Depts:</span>
+                          {c.department_ids.map((dId) => {
+                            const d = dbState.departments.find((dep) => dep.id === dId);
+                            return d ? (
+                              <span
+                                key={d.id}
+                                className="rounded-md bg-indigo-50 dark:bg-indigo-950/40 text-indigo-700 dark:text-indigo-300 border border-indigo-200/60 px-1.5 py-0.5 text-[10px] font-bold"
+                              >
+                                {d.code}
+                              </span>
+                            ) : null;
+                          })}
+                        </div>
+                      )}
                     </div>
                   </div>
 
@@ -544,6 +560,7 @@ function CompanyModal({
   const [location, setLocation] = useState(initialData?.location || "");
   const [website, setWebsite] = useState(initialData?.website || "");
   const [description, setDescription] = useState(initialData?.description || "");
+  const [selectedDeptIds, setSelectedDeptIds] = useState<number[]>(initialData?.department_ids || []);
   const [contactName, setContactName] = useState(initialData?.contacts[0]?.name || "");
   const [contactEmail, setContactEmail] = useState(initialData?.contacts[0]?.email || "");
   const [contactPhone, setContactPhone] = useState(initialData?.contacts[0]?.phone || "");
@@ -576,7 +593,7 @@ function CompanyModal({
         ? [
             {
               id: Date.now(),
-              company_id: nextId,
+              company_id: initialData ? initialData.id : nextId,
               name: contactName.trim(),
               designation: "Campus Recruiter",
               email: contactEmail.trim(),
@@ -586,29 +603,45 @@ function CompanyModal({
           ]
         : [];
 
-      draft.companies.push({
-        id: nextId,
-        name: cleanName,
-        name_normalized: norm,
-        industry: industry.trim() || undefined,
-        location: location.trim() || undefined,
-        website: website.trim() || undefined,
-        description: description.trim() || undefined,
-        status: "Active",
-        contacts,
-        job_roles: [],
-        created_at: now,
-        updated_at: now,
-      });
+      if (initialData) {
+        const comp = draft.companies.find((c) => c.id === initialData.id);
+        if (comp) {
+          comp.name = cleanName;
+          comp.name_normalized = norm;
+          comp.industry = industry.trim() || undefined;
+          comp.location = location.trim() || undefined;
+          comp.website = website.trim() || undefined;
+          comp.description = description.trim() || undefined;
+          comp.department_ids = selectedDeptIds.length > 0 ? selectedDeptIds : undefined;
+          comp.updated_at = now;
+          if (contacts.length > 0) comp.contacts = contacts;
+        }
+      } else {
+        draft.companies.push({
+          id: nextId,
+          name: cleanName,
+          name_normalized: norm,
+          industry: industry.trim() || undefined,
+          location: location.trim() || undefined,
+          website: website.trim() || undefined,
+          description: description.trim() || undefined,
+          department_ids: selectedDeptIds.length > 0 ? selectedDeptIds : undefined,
+          status: "Active",
+          contacts,
+          job_roles: [],
+          created_at: now,
+          updated_at: now,
+        });
+      }
     });
 
     logAudit({
       userId: user?.id || 1,
       userName: user?.name || "Placement Staff",
-      action: "ADD_COMPANY",
+      action: initialData ? "UPDATE_COMPANY" : "ADD_COMPANY",
       entityType: "Company",
       entityId: cleanName,
-      summary: `Registered company ${cleanName}`,
+      summary: initialData ? `Updated company profile: ${cleanName}` : `Registered company ${cleanName}`,
     });
 
     onClose();
@@ -692,6 +725,40 @@ function CompanyModal({
               onChange={(e) => setDescription(e.target.value)}
               className="w-full rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-900 px-3.5 py-2 text-xs"
             />
+          </div>
+
+          <div>
+            <div className="flex items-center justify-between mb-1.5">
+              <label className="font-semibold text-slate-700 dark:text-slate-300">
+                Target Department(s) <span className="text-slate-400 font-normal">(Optional in Company Settings)</span>
+              </label>
+              <span className="text-[10px] text-slate-400">Pre-populates drive setup</span>
+            </div>
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
+              {state.departments.map((dept) => {
+                const isChecked = selectedDeptIds.includes(dept.id);
+                return (
+                  <button
+                    key={dept.id}
+                    type="button"
+                    onClick={() => {
+                      setSelectedDeptIds((prev) =>
+                        isChecked ? prev.filter((id) => id !== dept.id) : [...prev, dept.id]
+                      );
+                    }}
+                    className={clsx(
+                      "flex items-center justify-between px-3 py-2 rounded-xl border text-xs font-semibold transition-all",
+                      isChecked
+                        ? "border-[var(--color-brand)] bg-[var(--color-brand)]/10 text-[var(--color-brand)]"
+                        : "border-slate-200 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-900/50 text-slate-600 dark:text-slate-400 hover:border-slate-300"
+                    )}
+                  >
+                    <span>{dept.code}</span>
+                    <span className="text-[10px] opacity-75">{dept.name.split(" ")[0]}</span>
+                  </button>
+                );
+              })}
+            </div>
           </div>
 
           <div className="border-t border-slate-100 dark:border-slate-800 pt-3">
@@ -785,6 +852,28 @@ function CompanyDetailModal({
         </div>
 
         <div className="p-6 space-y-5 text-xs max-h-[70vh] overflow-y-auto">
+          {/* Target Departments */}
+          <div>
+            <h3 className="font-bold uppercase tracking-wider text-slate-400 mb-2">Target Departments</h3>
+            {company.department_ids && company.department_ids.length > 0 ? (
+              <div className="flex flex-wrap gap-2">
+                {company.department_ids.map((dId) => {
+                  const d = state.departments.find((dep) => dep.id === dId);
+                  return d ? (
+                    <span
+                      key={d.id}
+                      className="rounded-lg bg-indigo-50 dark:bg-indigo-950/40 text-indigo-700 dark:text-indigo-300 border border-indigo-200/60 px-2.5 py-1 text-xs font-semibold"
+                    >
+                      {d.code} · {d.name}
+                    </span>
+                  ) : null;
+                })}
+              </div>
+            ) : (
+              <p className="text-slate-400">No specific departments set (Open to all branches).</p>
+            )}
+          </div>
+
           {/* Contacts */}
           <div>
             <h3 className="font-bold uppercase tracking-wider text-slate-400 mb-2">Campus Contacts</h3>

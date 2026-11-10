@@ -708,7 +708,25 @@ class LocalDatabase {
     // Hybrid sync: Check if IndexedDB has newer or larger data than localStorage
     loadFromIndexedDb().then((idbState) => {
       if (idbState && idbState.students && idbState.students.length > this.state.students.length) {
+        if (idbState.students.some((s: any) => s.internship_status === undefined)) {
+          const sample = getRichSampleData();
+          const sampleMap = new Map(sample.students.map((st) => [st.registration_number, st]));
+          idbState.students = idbState.students.map((s: any, idx: number) => {
+            if (s.internship_status === undefined) {
+              const matched = sampleMap.get(s.registration_number) || sample.students[idx % sample.students.length];
+              return {
+                ...s,
+                internship_status: matched?.internship_status || (idx % 3 === 0 ? "Active" : idx % 3 === 1 ? "Completed" : "None"),
+                internship_company: matched?.internship_company,
+                internship_role: matched?.internship_role,
+                internship_duration: matched?.internship_duration,
+              };
+            }
+            return s;
+          });
+        }
         this.state = idbState;
+        this.persist(idbState);
         this.notify();
       }
     });
@@ -729,6 +747,27 @@ class LocalDatabase {
           this.persist(sample);
           return sample;
         }
+
+        // Auto-migrate missing internship fields if previously seeded without them
+        if (parsed.students && parsed.students.some((s: any) => s.internship_status === undefined)) {
+          const sample = getRichSampleData();
+          const sampleMap = new Map(sample.students.map((st) => [st.registration_number, st]));
+          parsed.students = parsed.students.map((s: any, idx: number) => {
+            if (s.internship_status === undefined) {
+              const matched = sampleMap.get(s.registration_number) || sample.students[idx % sample.students.length];
+              return {
+                ...s,
+                internship_status: matched?.internship_status || (idx % 3 === 0 ? "Active" : idx % 3 === 1 ? "Completed" : "None"),
+                internship_company: matched?.internship_company,
+                internship_role: matched?.internship_role,
+                internship_duration: matched?.internship_duration,
+              };
+            }
+            return s;
+          });
+          this.persist(parsed);
+        }
+
         return parsed;
       }
     } catch (e) {

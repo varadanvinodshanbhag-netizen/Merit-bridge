@@ -479,7 +479,7 @@ export default function LoginPage() {
       // Switch to Sign In mode with prefilled username and success banner
       setValue("username", uname);
       setValue("password", "");
-      setNotice(`✅ Account created successfully for ${newUserObj.display_name}! You can now sign in.`);
+      setNotice(`Account created for ${newUserObj.display_name}. You can now sign in.`);
       setAuthMode("signin");
     } catch (err: unknown) {
       const msg = err instanceof Error ? err.message : "Registration failed.";
@@ -712,8 +712,7 @@ export default function LoginPage() {
       >
         {/* Left Panel: Desktop Brand & Feature Showcase */}
         <div className="hidden md:flex flex-col justify-between w-72 lg:w-80 shrink-0 bg-gradient-to-br from-[#9e2040] via-[#851833] to-[#4a0d1c] p-6 lg:p-7 text-white relative select-none">
-          <div className="absolute -top-12 -left-12 w-44 h-44 rounded-full bg-white/10 blur-2xl pointer-events-none" />
-          <div className="absolute -bottom-12 -right-12 w-44 h-44 rounded-full bg-black/20 blur-2xl pointer-events-none" />
+          
 
           {/* Brand Header */}
           <div className="relative z-10 space-y-2">
@@ -724,7 +723,7 @@ export default function LoginPage() {
                   MeritBridge
                 </h1>
                 <p className="text-[10px] font-semibold tracking-wider text-rose-200 uppercase">
-                  RNS Rural Polytechnic
+                  From RNS Rural Polytechnic
                 </p>
               </div>
             </div>
@@ -974,7 +973,7 @@ export default function LoginPage() {
                     {failedCount > 0 && failedCount < SECURITY_CONFIG.MAX_FAILED_ATTEMPTS && (
                       <div className="mt-2 text-center">
                         <span className="text-[11px] font-semibold text-amber-600 dark:text-amber-400">
-                          ⚠️ {SECURITY_CONFIG.MAX_FAILED_ATTEMPTS - failedCount} attempt(s) left before 15-minute lockout!
+                          {SECURITY_CONFIG.MAX_FAILED_ATTEMPTS - failedCount} attempts remaining before 15-minute lockout
                         </span>
                       </div>
                     )}
@@ -1299,7 +1298,7 @@ export default function LoginPage() {
                       className="w-full rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50/70 dark:bg-slate-900/60 px-3 py-1.5 text-xs md:text-sm text-slate-900 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-[var(--color-brand)]/20 focus:border-[var(--color-brand)]"
                     />
                     <p className="mt-0.5 text-[10px] text-slate-400">
-                      💡 Used to verify your identity and recover your password if forgotten.
+                      Used to verify identity and recover password
                     </p>
                   </div>
                 </div>
@@ -1332,7 +1331,7 @@ export default function LoginPage() {
 
           {/* Footer note */}
           <p className="mt-3 text-center text-[10px] text-slate-400 dark:text-slate-500">
-            🛡️ Local cryptographic storage &bull; Zero external cloud dependency
+            Local cryptographic storage · Offline terminal
           </p>
         </div>
       </div>
@@ -1570,7 +1569,7 @@ export default function LoginPage() {
                         className="w-full px-3.5 py-2 text-xs md:text-sm rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-900 text-slate-900 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-[var(--color-brand)]/20 focus:border-[var(--color-brand)]"
                       />
                       <p className="mt-1 text-[11px] text-slate-400">
-                        💡 Answer is not case-sensitive. (Default demo: <code className="font-mono">fluffy</code>)
+                        Answer is case-insensitive (default: <code className="font-mono">fluffy</code>)
                       </p>
                     </div>
                   </>
